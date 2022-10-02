@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotClass2 {
     private DcMotor motorFL, motorBR, motorBL, motorFR;//our motor
-    private DcMotor[] motors;
+    private DcMotor[] motors;//beware.... uhh
 
     //Declare an opmode and a telemetry object
     private LinearOpMode opMode;
