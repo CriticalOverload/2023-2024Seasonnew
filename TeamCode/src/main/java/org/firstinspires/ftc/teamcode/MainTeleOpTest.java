@@ -5,16 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "Main TeleOp")
-public class MainTeleOp extends LinearOpMode {
+public class MainTeleOpTest extends LinearOpMode {
     private DcMotor motorFR,motorBR,motorFL,motorBL, motorLS;
     private RobotClass2 robot;
     @Override
     public void runOpMode() throws InterruptedException{
-        motorFR = hardwareMap.dcMotor.get("FR");
+        motorFR = hardwareMap.dcMotor.get("LS");
         motorBR = hardwareMap.dcMotor.get("BR");
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
-        motorLS = hardwareMap.dcMotor.get("LS");
 
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, motorLS, this);
         robot.setupRobot();
@@ -48,8 +47,7 @@ public class MainTeleOp extends LinearOpMode {
             double highEP =37/circumference;// (inches from ground / circumference)* ticks
 
             motorFL.setPower((leftPower - (rotation))*powerMod);
-//            motorFR.setPower((rightPower + (rotation))*powerMod);
-            motorLS.setPower((rightPower + (rotation))*powerMod);
+            motorFR.setPower((rightPower + (rotation))*powerMod);
             motorBL.setPower((rightPower - (rotation))*powerMod);
             motorBR.setPower((leftPower + (rotation))*powerMod);
 
