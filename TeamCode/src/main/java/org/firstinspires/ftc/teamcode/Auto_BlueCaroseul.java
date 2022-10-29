@@ -30,7 +30,7 @@ public class Auto_BlueCaroseul extends LinearOpMode {
     OpenCvCamera cam;// webcam
     int width = 640;
     int height = 480;
-    CVClassLeft mainPipeline;
+    CVClass mainPipeline;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -61,7 +61,7 @@ public class Auto_BlueCaroseul extends LinearOpMode {
         //setup camera, turn it on
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-        mainPipeline = new CVClassLeft();//create new pipeline
+        mainPipeline = new CVClass();//create new pipeline
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
@@ -81,7 +81,7 @@ public class Auto_BlueCaroseul extends LinearOpMode {
         telemetry.update();
         waitForStart();//if there is a camera error... and it crashes the program... then we need to find a way to "pause stream"
 
-        int code = mainPipeline.getCode();//get the code before we move
+        int code = mainPipeline.getSignal();//get the code before we move
         telemetry.addData("barcode value", code);
         if (code == 0) {
             telemetry.addData("assuming", "1");

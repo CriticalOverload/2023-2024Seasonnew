@@ -44,6 +44,14 @@ public class RobotClass2 {
     }
 
     /**
+     * Empty. CV testing or just for dashboard capabilities
+     * */
+    public RobotClass2(LinearOpMode opMode){
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+    }
+
+    /**
      * Setup the robot for PID as well as the telemetry for FTCDashboard
      */
     public void setupRobot() throws InterruptedException{
@@ -53,13 +61,14 @@ public class RobotClass2 {
         }
         resetEncoders();
 
-        //for dashboard vvv
+//        setupDashboard();
+    }
+    public void setupDashboard(){
         packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
         packet.put("setup","done");
         dash.sendTelemetryPacket(packet);
     }
-
     /**
      * Reset motor encoders
      */
@@ -108,13 +117,13 @@ public class RobotClass2 {
 
         power = error + derivative + integral;
 
-        addTelem("dist",dist);
-        addTelem("motorPos",motorFL.getCurrentPosition());
-        addTelem("error", error);
-        addTelem("derivative", derivative);
-        addTelem("integral", integral);
-        addTelem("power", power);
-        sendTelem();
+        addData("dist",dist);
+        addData("motorPos",motorFL.getCurrentPosition());
+        addData("error", error);
+        addData("derivative", derivative);
+        addData("integral", integral);
+        addData("power", power);
+        update();
 
         return power;
     }
@@ -124,11 +133,11 @@ public class RobotClass2 {
         lastError= e;
     }
 
-    public void addTelem(String header, Object data){
+    public void addData(String header, Object data){
         packet.put(header, data);
     }
 
-    public void sendTelem(){
+    public void update(){
         dash.sendTelemetryPacket(packet);
     }
 }

@@ -19,8 +19,8 @@ public class MainTeleOp extends LinearOpMode {
         robot.setupRobot();
 
         double powerMod = 1;
-        robot.addTelem("setup?",true);
-        robot.sendTelem();
+        telemetry.addData("setup?", true);
+        telemetry.update();
 
         waitForStart();
         while(opModeIsActive()){
