@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class RobotClass2 {
-    private DcMotor motorFL, motorBR, motorBL, motorFR;//our motor
+    private DcMotor motorFL, motorBR, motorBL, motorFR, motorLS;//our motor
     private DcMotor[] motors;//beware.... uhh
 
     //Declare an opmode and a telemetry object
@@ -33,11 +33,12 @@ public class RobotClass2 {
      * @param motorBR back right motor
      * @param opMode From the opMode we get telemetry
      * */
-    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, LinearOpMode opMode){
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, DcMotor motorLS, LinearOpMode opMode){
         this.motorFL = motorFL;
         this.motorFR = motorFR;
         this.motorBL = motorBL;
         this.motorBR = motorBR;
+        this.motorLS = motorLS;
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
@@ -54,10 +55,10 @@ public class RobotClass2 {
         resetEncoders();
 
         //for dashboard vvv
-        packet = new TelemetryPacket();
+    /*    packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
         packet.put("setup","done");
-        dash.sendTelemetryPacket(packet);
+        dash.sendTelemetryPacket(packet);*/
     }
 
     /**
