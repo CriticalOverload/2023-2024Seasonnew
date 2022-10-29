@@ -117,7 +117,7 @@ public class RobotClass2 {
         addTelem("power", power);
         sendTelem();
 
-        return power;
+        return power;//again
     }
 
 
