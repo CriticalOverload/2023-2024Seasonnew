@@ -20,8 +20,7 @@ public class AutoTestDetect extends LinearOpMode {
     int width = 640;
     int height = 480;
     CVClass mainPipeline;
-    OpenCvInternalCamera2 phonecam;//?
-    //OpenCvInternalCamera phonecam;//?
+    OpenCvInternalCamera2 phonecam;
 
     @Override
     public void runOpMode() throws InterruptedException {

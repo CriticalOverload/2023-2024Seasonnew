@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -12,9 +14,11 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+@Config
 public class CVClass extends OpenCvPipeline{
     double hue;
     double sensitivity;
+    public static double huething = 25;
 
     List<MatOfPoint> contours = new ArrayList<>();
 
@@ -135,14 +139,14 @@ public class CVClass extends OpenCvPipeline{
 
         //using HSV
         //https://www.w3schools.com/colors/colors_hsl.asp
-        hue = 42;//53 is yellow. Can also do 60ish
-//        hue = hue * 179/255;//????
+        hue = huething;//30;//53 is yellow. Can also do 60ish
         sensitivity = 10;//to adjust for slight variations. Ewww that's a giant sensitivity...
 
         //step 1: blur
         Imgproc.GaussianBlur(output, blur, new Size(5,5), 0);//source, destination, size of blur, sigmax (not too important) todo
 
         //step 2: rgb to hsv
+        //or bgr???
         Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_RGB2HSV);//source, dest, color swap choice (is an int technically)
 
         //find contours:
