@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class BaseTest extends LinearOpMode {
     private DcMotor motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight, motorLS;
     private Servo servo;
-    double servoPosition = 1.0;
+    double servoPosition = 0.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,7 +63,7 @@ public class BaseTest extends LinearOpMode {
 
             //Claw
             if (gamepad2.dpad_up) {
-                servo.setPosition(0.5);
+                servo.setPosition(0.0);
             }
             else if (gamepad2.dpad_down) {
                 servo.setPosition(1.0);
