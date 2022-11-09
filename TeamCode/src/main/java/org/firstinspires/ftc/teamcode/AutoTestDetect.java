@@ -76,6 +76,9 @@ public class AutoTestDetect extends LinearOpMode {
             if (signal == 0) {
                 dashboarder.addData("assuming", "1");
             }
+
+            dashboarder.addData("black box height", mainPipeline.getHeight());
+
             dashboarder.update();
             Thread.sleep(1000);
         }

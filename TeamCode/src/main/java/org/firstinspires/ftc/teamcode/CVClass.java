@@ -17,15 +17,14 @@ import java.util.List;
 @Config
 public class CVClass extends OpenCvPipeline{
     public static double satlow = 0;
-    public static double sathi = 50;
-    public static double vallow = 100;
-    public static double valhi = 255;
-
-    List<MatOfPoint> contours = new ArrayList<>();
+    public static double sathi = 255;
+    public static double vallow = 80;
+    public static double valhi = 0;
+    public static double pdiffs = 20;
 
     Mat output = new Mat();//output mat
 
-    Rect whitebox,yellowbox;//draws box
+    Rect blackbox,yellowbox;//draws box
 
     int signal = 0; //1 left, 2 mid, 3 right. 0 means default to left.
 
@@ -33,33 +32,8 @@ public class CVClass extends OpenCvPipeline{
     public Mat processFrame(Mat input){
         /*
         step 1: get max yellow
-        step 2: if there is yellow, get max white. else return 0
-        step 3: if there is no white, then return 2. else return 1.
-        * */
-
-        /*input.copyTo(output);//don't modify inputs
-
-        contours.clear();//clear
-
-        //using HSV
-        //https://www.w3schools.com/colors/colors_hsl.asp
-        hue = 53;//53 is yellow. Can also do 60ish
-        hue = hue * 179/255;//????
-        sensitivity = 30;//to adjust for slight variations. Ewww that's a giant sensitivity...
-
-        //step 1: blur
-        Imgproc.GaussianBlur(input, blur, new Size(5,5), 0);//source, destination, size of blur, sigmax (not too important) todo
-
-        //step 2: rgb to hsv
-        Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_RGB2HSV);//source, dest, color swap choice (is an int technically)
-
-        //find contours:
-//        Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
-        Scalar lowBound = new Scalar(hue-sensitivity,100,50);//lower bound
-        Scalar hiBound = new Scalar(hue+sensitivity,255,255);//higher bound
-        Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
-        Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
-        //draws the contours given the single (bi) colored mat
+        step 2: if there is yellow, get max black. else return 0
+        step 3: if there is no black, then return 2. else return 1.
         */
         //NOTE!!!!!
         //H:[0,179]
@@ -70,16 +44,61 @@ public class CVClass extends OpenCvPipeline{
         //also test using RETR_TREE idk what the difference is. probably just method todo
 
         List<MatOfPoint> yellowContours = getYellow(input);
-        List<MatOfPoint> whiteContours = getWhite(input);//may make this black?
-//        input.copyTo(output);
+        List<MatOfPoint> blackContours = getBlack(input);//may make this black?
+        input.copyTo(output);
+
+        //need to draw the rectangles first...
+
+        if(yellowContours.size() > 0){
+            double max = 0;
+            int maxInd = 0;
+            for(int i = 0; i < yellowContours.size(); i++){//loop through all the contours, and find the largest box
+                double area = Imgproc.contourArea(yellowContours.get(i));
+                if(area > max){
+                    max = area;
+                    maxInd = i;
+                }
+            }
+            //draw a box of the largest one of single color
+            Rect largestRect = Imgproc.boundingRect(yellowContours.get(maxInd));
+            yellowbox = largestRect;
+            Scalar boxColor = new Scalar(0, 255, 255);//not white... something!!
+            Imgproc.rectangle(output, yellowbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
+        }
+
+        if(blackContours.size()> 0){
+            double max = 0;
+            int maxInd = 0;
+            for(int i = 0; i < blackContours.size(); i++){//loop through all the contours, and find the largest box
+                double area = Imgproc.contourArea(blackContours.get(i));
+                if(area > max){
+                    max = area;
+                    maxInd = i;
+                }
+            }
+            //draw a box of the largest one of single color
+            Rect largestRect = Imgproc.boundingRect(blackContours.get(maxInd));
+            blackbox = largestRect;
+            Scalar boxColor = new Scalar(255, 255, 255);//box should be white?
+            Imgproc.rectangle(output, blackbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
+        }
 
         if(yellowContours.size() > 0){//in other words, it found yellow
-            if(whiteContours.size() > 0){//found white
-                //yellow and white
-                signal = 2;
+            if(blackContours.size() > 0){//found black... change height!!!
+                double boxPDiffs = 200.0*Math.abs(blackbox.height-yellowbox.height)/(double)(blackbox.height+ yellowbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
+                if (boxPDiffs < pdiffs){
+                    //yellow and black
+                    //around 123ish
+                    signal = 2;
+                }
+                else{
+                    signal = 3;//fix this if later... todo
+                }
             }
             else {
                 //just yellow
+                //sees yellow but doesn't see black
+                //sees yellow and black, but box sizes aren't similar
                 signal = 3;
             }
         }
@@ -87,46 +106,13 @@ public class CVClass extends OpenCvPipeline{
             //no yellow, signal should be 1
             signal = 1;
         }
-
-        //just for fun, let's draw boxes
-
-//        if(yellowContours.size() > 0){
-//            double max = 0;
-//            int maxInd = 0;
-//            for(int i = 0; i < yellowContours.size(); i++){//loop through all the contours, and find the largest box
-//                double area = Imgproc.contourArea(yellowContours.get(i));
-//                if(area > max){
-//                    max = area;
-//                    maxInd = i;
-//                }
-//            }
-//            //draw a box of the largest one of single color
-//            Rect largestRect = Imgproc.boundingRect(yellowContours.get(maxInd));
-//            yellowbox = largestRect;
-//            Scalar boxColor = new Scalar(255, 255, 255);//box should be white?
-//            Imgproc.rectangle(output, yellowbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
-//        }
-
-        if(whiteContours.size()> 0){
-            double max = 0;
-            int maxInd = 0;
-            for(int i = 0; i < whiteContours.size(); i++){//loop through all the contours, and find the largest box
-                double area = Imgproc.contourArea(whiteContours.get(i));
-                if(area > max){
-                    max = area;
-                    maxInd = i;
-                }
-            }
-            //draw a box of the largest one of single color
-            Rect largestRect = Imgproc.boundingRect(whiteContours.get(maxInd));
-            whitebox = largestRect;
-            Scalar boxColor = new Scalar(255, 255, 255);//box should be white?
-            Imgproc.rectangle(output, whitebox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
-        }
-
         return output;
     }
-//blog.jcole.us/2017/04/13/wireless-programming-for-ftc-robots
+
+    //unrelated...
+    //blog.jcole.us/2017/04/13/wireless-programming-for-ftc-robots
+    //related
+    //https://alloyui.com/examples/color-picker/hsv.html
     public List<MatOfPoint> getYellow(Mat input){
         Mat output = new Mat();//output mat
         Mat hsv = new Mat();//after hsv
@@ -134,7 +120,7 @@ public class CVClass extends OpenCvPipeline{
         Mat singleColor = new Mat();//after single color
         Mat hierarchy = new Mat();//after ?
 
-        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        List<MatOfPoint> contours = new ArrayList<>();
 
         input.copyTo(output);//don't modify inputs
 
@@ -148,7 +134,6 @@ public class CVClass extends OpenCvPipeline{
 
         //find contours:
         //using HSV
-        //https://www.w3schools.com/colors/colors_hsl.asp
         double hue = 25;
         double sensitivity = 10;//to adjust for slight variations. Ewww that's a giant sensitivity...
 
@@ -161,14 +146,14 @@ public class CVClass extends OpenCvPipeline{
         return contours;
     }
 
-    public List<MatOfPoint> getWhite(Mat input){
-//        Mat output = new Mat();//output mat
+    public List<MatOfPoint> getBlack(Mat input){
+        Mat output = new Mat();//output mat
         Mat hsv = new Mat();//after hsv
         Mat blur = new Mat();//after blur
         Mat singleColor = new Mat();//after single color
         Mat hierarchy = new Mat();//after ?
 
-        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        List<MatOfPoint> contours = new ArrayList<>();
 
         double saturation, value;
         double sensitivity;
@@ -176,9 +161,8 @@ public class CVClass extends OpenCvPipeline{
         input.copyTo(output);//don't modify inputs
 
         //using HSV
-        //https://www.w3schools.com/colors/colors_hsl.asp
-        //https://alloyui.com/examples/color-picker/hsv.html
-        //for white, sat and value matter but hue doesn't really.
+
+        //for black, sat and value matter but hue doesn't really.
         saturation = 0;
         value = 255;
         sensitivity = 30;//to adjust for slight variations. Ewww that's a giant sensitivity...
@@ -190,18 +174,15 @@ public class CVClass extends OpenCvPipeline{
         Imgproc.cvtColor(blur, hsv, Imgproc.COLOR_RGB2HSV);//source, dest, color swap choice (is an int technically)
 
         //find contours:
-//        Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
         Scalar lowBound = new Scalar(0,satlow,vallow);//saturation,value - sensitivity);//lower bound
-        Scalar hiBound = new Scalar(20,sathi,valhi);//saturation + sensitivity,value);//higher bound
+        Scalar hiBound = new Scalar(179,sathi,valhi);//saturation + sensitivity,value);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
-        singleColor.copyTo(output);
-
         return contours;
     }
 
     public int getSignal() {
         return signal;
     }
-
+    public int getHeight(){return blackbox.height;}
 }
