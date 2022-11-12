@@ -20,6 +20,7 @@ public class AutoTestDetect extends LinearOpMode {
     int width = 640;
     int height = 480;
     CVClass mainPipeline;
+    CVClassTry2 try2;
     OpenCvInternalCamera2 phonecam;
 
     @Override
@@ -33,6 +34,7 @@ public class AutoTestDetect extends LinearOpMode {
 
 //        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
         mainPipeline = new CVClass();//create new pipeline
+        try2 = new CVClassTry2();
 
         RobotClass2 dashboarder = new RobotClass2(this);
         dashboarder.setupDashboard();
@@ -61,23 +63,93 @@ public class AutoTestDetect extends LinearOpMode {
 
             @Override
             public void onError(int errorCode) {
-                telemetry.addData("Camera Error...", ":(");
+                dashboarder.addData("Camera Error...", ":(");
+                dashboarder.update();
                 System.exit(0);
             }
         });*/
-
+        boolean main = true;
         waitForStart();//if there is a camera error... and it crashes the program... then we need to find a way to "pause stream"
     	int signal;
         while(opModeIsActive()){
-            signal = mainPipeline.getSignal();//get the code before we move
+            if(gamepad1.a){
+                phonecam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+                    @Override
+                    public void onOpened() {
+                        phonecam.setPipeline(mainPipeline);//set webcam pipeline
+                        phonecam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+                        dashboarder.addData("Camera Error...", ":(");
+                        dashboarder.update();
+                        System.exit(0);
+                    }
+                });
+
+                /*cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+                    @Override
+                    public void onOpened() {
+                        cam.setPipeline(mainPipeline);//set webcam pipeline
+                        cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+                        dashboarder.addData("Camera Error...", ":(");
+                        dashboarder.update();
+                        System.exit(0);
+                    }
+                });*/
+                main = true;
+            }
+            if(gamepad1.b){
+                phonecam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+                    @Override
+                    public void onOpened() {
+                        phonecam.setPipeline(try2);//set webcam pipeline
+                        phonecam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+                        dashboarder.addData("Camera Error...", ":(");
+                        dashboarder.update();
+                        System.exit(0);
+                    }
+                });
+
+                /*cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+                    @Override
+                    public void onOpened() {
+                        cam.setPipeline(try2);//set webcam pipeline
+                        cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+                        dashboarder.addData("Camera Error...", ":(");
+                        dashboarder.update();
+                        System.exit(0);
+                    }
+                });*/
+                main = false;
+            }
+            if(main){
+                signal = mainPipeline.getSignal();
+                dashboarder.addData("black box height", mainPipeline.getHeight());
+            }
+            else{
+                signal = try2.getSignal();
+                dashboarder.addData("black box height", try2.getHeight());
+            }
 
             dashboarder.addData("signal value", signal);
         
             if (signal == 0) {
                 dashboarder.addData("assuming", "1");
             }
-
-            dashboarder.addData("black box height", mainPipeline.getHeight());
 
             dashboarder.update();
             Thread.sleep(1000);
