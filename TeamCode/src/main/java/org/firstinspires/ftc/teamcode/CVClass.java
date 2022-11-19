@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.vuforia.Box3D;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -21,7 +22,8 @@ public class CVClass extends OpenCvPipeline{
     public static double vallow = 80;
     public static double valhi = 0;
     public static double pdiffs = 20;
-
+    private double boxPDiffs = 0.0;
+    private List<MatOfPoint> blackContours;
     Mat output = new Mat();//output mat
 
     Rect blackbox,yellowbox;//draws box
@@ -44,7 +46,7 @@ public class CVClass extends OpenCvPipeline{
         //also test using RETR_TREE idk what the difference is. probably just method todo
 
         List<MatOfPoint> yellowContours = getYellow(input);
-        List<MatOfPoint> blackContours = getBlack(input);//may make this black?
+        blackContours = getBlack(input);//may make this black?
         input.copyTo(output);
 
         //need to draw the rectangles first...
@@ -85,7 +87,8 @@ public class CVClass extends OpenCvPipeline{
 
         if(yellowContours.size() > 0){//in other words, it found yellow
             if(blackContours.size() > 0){//found black... change height!!!
-                double boxPDiffs = 200.0*Math.abs(blackbox.height-yellowbox.height)/(double)(blackbox.height+ yellowbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
+                boxPDiffs = 200.0*Math.abs(blackbox.height-yellowbox.height)/(double)(blackbox.height+ yellowbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
+
                 if (boxPDiffs < pdiffs){
                     //yellow and black
                     //around 123ish
@@ -184,5 +187,13 @@ public class CVClass extends OpenCvPipeline{
     public int getSignal() {
         return signal;
     }
-    public int getHeight(){return blackbox.height;}
+
+    public int getHeight() {
+        if (blackbox != null)
+            return blackbox.height;
+        return -1;
+    }
+    public double getBoxPDiffs(){return boxPDiffs;}
+
+    public int getContourSize(){return blackContours.size();}
 }

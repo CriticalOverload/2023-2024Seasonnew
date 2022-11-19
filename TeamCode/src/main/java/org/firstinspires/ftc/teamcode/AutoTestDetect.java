@@ -16,12 +16,12 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 @Config
 public class AutoTestDetect extends LinearOpMode {
     //for OpenCV
-//    OpenCvCamera cam;// webcam
+    OpenCvCamera cam;// webcam
     int width = 640;
     int height = 480;
     CVClass mainPipeline;
     CVClassTry2 try2;
-    OpenCvInternalCamera2 phonecam;
+//    OpenCvInternalCamera2 phonecam;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,16 +30,15 @@ public class AutoTestDetect extends LinearOpMode {
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 
         //getting live preview and phone camera
-        phonecam = OpenCvCameraFactory.getInstance().createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, camViewID);
-
-//        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
+//        phonecam = OpenCvCameraFactory.getInstance().createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, camViewID);
+        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
         mainPipeline = new CVClass();//create new pipeline
         try2 = new CVClassTry2();
 
         RobotClass2 dashboarder = new RobotClass2(this);
         dashboarder.setupDashboard();
 
-        phonecam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+        /*phonecam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
             public void onOpened() {
                 phonecam.setPipeline(mainPipeline);//set webcam pipeline
@@ -52,9 +51,9 @@ public class AutoTestDetect extends LinearOpMode {
                 dashboarder.update();
                 System.exit(0);
             }
-        });
+        });*/
 
-        /*cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
             public void onOpened() {
                 cam.setPipeline(mainPipeline);//set webcam pipeline
@@ -67,7 +66,7 @@ public class AutoTestDetect extends LinearOpMode {
                 dashboarder.update();
                 System.exit(0);
             }
-        });*/
+        });
         boolean main = true;
         dashboarder.addData("please work","this time");
         dashboarder.update();
@@ -76,6 +75,8 @@ public class AutoTestDetect extends LinearOpMode {
         while(opModeIsActive()){
             dashboarder.addData("yay!","first!");
             dashboarder.update();
+            telemetry.addData("Got to this point","yay");
+            telemetry.update();
             Thread.sleep(1000);
             /*if(gamepad1.a){
                 phonecam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
@@ -150,13 +151,14 @@ public class AutoTestDetect extends LinearOpMode {
                 dashboarder.addData("black box height", try2.getHeight());
             }*/
 
-            dashboarder.addData("signal value", signal);
+            telemetry.addData("signal value", signal);
         
             if (signal == 0) {
-                dashboarder.addData("assuming", "1");
+                telemetry.addData("assuming", "1");
             }
-
-            dashboarder.update();
+            telemetry.addData("boxPDiffs", mainPipeline.getBoxPDiffs());
+            telemetry.addData("blackContourSize", mainPipeline.getContourSize());
+            telemetry.update();
             Thread.sleep(1000);
         }
     }
