@@ -16,7 +16,7 @@ public class MainTeleOp extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("BR");
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
-        slide = hardwareMap.dcMotor.get("slide");
+        slide = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, this, false);
         robot.setupRobot();
