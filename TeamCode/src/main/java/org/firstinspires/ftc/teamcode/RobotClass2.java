@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -11,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class RobotClass2 {
     private DcMotor motorFL, motorBR, motorBL, motorFR;//our motor
     private DcMotor[] motors;//beware.... uhh
+    private DcMotor viperslide;
+    private Servo claw;
 
     //Declare an opmode and a telemetry object
     private LinearOpMode opMode;
@@ -19,6 +22,7 @@ public class RobotClass2 {
     //for ftcdashboard
     private TelemetryPacket packet;
     private FtcDashboard dash;
+    private boolean yesDash;
 
     //for PID
     private double lastError=0;
@@ -31,9 +35,34 @@ public class RobotClass2 {
      * @param motorFR front right motor
      * @param motorBL back left motor
      * @param motorBR back right motor
+     * @param viperslide slide motor
+     * @param claw claw servo
      * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
      * */
-    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, LinearOpMode opMode){
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, DcMotor viperslide, Servo claw, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.viperslide = viperslide;
+        this.claw = claw;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash=yesDash;
+    }
+
+    /**
+     * Base only Constructor
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, LinearOpMode opMode, boolean yesDash){
         this.motorFL = motorFL;
         this.motorFR = motorFR;
         this.motorBL = motorBL;
@@ -41,6 +70,7 @@ public class RobotClass2 {
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash = yesDash;
     }
 
     /**
@@ -49,20 +79,22 @@ public class RobotClass2 {
     public RobotClass2(LinearOpMode opMode){
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
+        this.yesDash=true;
     }
 
     /**
      * Setup the robot for PID as well as the telemetry for FTCDashboard
      */
     public void setupRobot() throws InterruptedException{
-        //reverse the needed motors?
+        //reverse the needed motors here
         for(DcMotor m : motors){
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         resetEncoders();
-
-//        setupDashboard();
+        if(yesDash)
+            setupDashboard();
     }
+
     public void setupDashboard(){
         packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
@@ -103,6 +135,8 @@ public class RobotClass2 {
         motorBR.setPower(leftPower);
     }
 
+
+    //may edit this to be just for the slides todo
     public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) throws InterruptedException{
         //go distance, calculating power based on distance
         double power, error, derivative;
@@ -128,6 +162,32 @@ public class RobotClass2 {
         return power;
     }
 
+    public void moveSlides(int level){
+        //setup this with pid stuff
+        switch(level){
+            default:
+            case 0:
+                //ground, with slight adjustment, or pick up
+                break;
+            case 1:
+                //low
+                break;
+            case 2:
+                //medium
+                break;
+            case 3:
+                //high
+                break;
+        }
+    }
+
+    public void openClaw(){
+        claw.setPosition(1);
+    }
+
+    public void closeClaw(){
+        claw.setPosition(0);
+    }
 
     public void setLastError(double e){//?????????
         lastError= e;
