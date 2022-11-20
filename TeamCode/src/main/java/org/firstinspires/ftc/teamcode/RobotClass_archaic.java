@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class RobotClass {
+public class RobotClass_archaic {
     private DcMotor motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft;
     private DcMotor intake, outtake;
 
@@ -69,8 +69,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, DistanceSensor distSenseFront, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, DistanceSensor distSenseFront, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -99,8 +99,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -128,8 +128,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -154,8 +154,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -177,8 +177,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -198,8 +198,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -220,8 +220,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor motorOuttake, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor motorOuttake, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -938,8 +938,8 @@ public class RobotClass {
         motorBackRight.setTargetPosition(targetticks);
         motorFrontRight.setTargetPosition(targetticks);
 
-        double kp = PIDCalibration.getKp();//Todo
-        double kd = PIDCalibration.getKd();//todo
+        double kp = 1.8;//PIDCalibration.getKp();//Todo
+        double kd = 0.4;//PIDCalibration.getKd();//todo
 
 
         double dist = motorFrontLeft.getCurrentPosition();

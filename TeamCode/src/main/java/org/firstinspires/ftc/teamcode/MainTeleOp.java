@@ -27,9 +27,8 @@ public class MainTeleOp extends LinearOpMode {
 
         waitForStart();
         while(opModeIsActive()){
-            //right+left-
-            //up-down+?!<<<<<<<<<<
-            //drive
+
+            //slides
             if(gamepad1.a){
                 //set slide
             }
@@ -39,12 +38,23 @@ public class MainTeleOp extends LinearOpMode {
             if(gamepad1.x){
                 //set slide
             }
-            if(gamepad1.left_bumper){
+            slide.setPower(gamepad2.right_stick_y);//manual adjustment
+
+            //claw
+            if(gamepad2.left_bumper){
                 robot.openClaw();
             }
-            if(gamepad1.right_bumper){
+            if(gamepad2.right_bumper){
                 robot.closeClaw();
             }
+
+            //driving
+            if(gamepad1.right_bumper){
+                powerMod = 0.5;
+            }else{
+                powerMod = 1.0;
+            }
+
             double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) + 3*(Math.PI/4);//-(0)-45=45
             double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double rotation = gamepad1.left_stick_x;
@@ -56,6 +66,9 @@ public class MainTeleOp extends LinearOpMode {
             motorFR.setPower((rightPower + (rotation))*powerMod);
             motorBL.setPower((rightPower - (rotation))*powerMod);
             motorBR.setPower((leftPower + (rotation))*powerMod);
+
+            telemetry.addData("Slide position",slide.getCurrentPosition());
+            telemetry.update();
 
         }
     }

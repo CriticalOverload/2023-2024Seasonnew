@@ -27,7 +27,7 @@ public class RobotClass2 {
     //for PID
     private double lastError=0;
     private double ckp, cki, ckd;//there is a c in front to remind me to CHANGE!!! TODO!!!!!!!!!!!
-
+    private double integral=0;
     //setup
     /**
      * Full Constructor
@@ -83,6 +83,16 @@ public class RobotClass2 {
     }
 
     /**
+     * Empty with Slides. For PID callibration only!
+     * */
+    public RobotClass2(DcMotor viperslide, LinearOpMode opMode, boolean yesDash){
+        this.viperslide= viperslide;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        this.yesDash=yesDash;
+    }
+
+    /**
      * Setup the robot for PID as well as the telemetry for FTCDashboard
      */
     public void setupRobot() throws InterruptedException{
@@ -135,30 +145,31 @@ public class RobotClass2 {
         motorBR.setPower(leftPower);
     }
 
-
+    public void resetPID(){
+        integral = 0;
+        lastError = 0;
+    }
     //may edit this to be just for the slides todo
-    public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) throws InterruptedException{
+    public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) {
         //go distance, calculating power based on distance
         double power, error, derivative;
-        double integral = 0;//might need to make this global?? or pass in?? or?????
 
-        error = kp*(dist - motorFL.getCurrentPosition());
+        error = dist - viperslide.getCurrentPosition();
 
-        derivative = kd*(error-lastError)/timer.seconds();
+        derivative = (error-lastError)/timer.seconds();
         lastError = error;
 
-        integral += ki*(error*timer.seconds());
+        integral += error*timer.seconds();
 
-        power = error + derivative + integral;
+        power = error*kp + derivative*kd + integral*ki;
 
-        addData("dist",dist);
-        addData("motorPos",motorFL.getCurrentPosition());
-        addData("error", error);
-        addData("derivative", derivative);
-        addData("integral", integral);
-        addData("power", power);
-        update();
-
+//        addData("dist",dist);
+//        addData("motorPos",viperslide.getCurrentPosition());
+//        addData("error", error);
+//        addData("derivative", derivative);
+//        addData("integral", integral);
+//        addData("power", power);
+//        update();
         return power;
     }
 

@@ -22,7 +22,7 @@ public class Auto_BlueCaroseul extends LinearOpMode {
     private BNO055IMU imu;
 
     //for robot motion
-    private RobotClass robot;
+    private RobotClass_archaic robot;
 
     private DistanceSensor distsensefront, distsenseback;
 
@@ -53,7 +53,7 @@ public class Auto_BlueCaroseul extends LinearOpMode {
         distsensefront = hardwareMap.get(DistanceSensor.class,"distsensefront");
 
         //create robot object
-        robot = new RobotClass(motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft, motorIntake, motorOuttake, bucket, duck, distsenseback, distsensefront, imu,this);
+        robot = new RobotClass_archaic(motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft, motorIntake, motorOuttake, bucket, duck, distsenseback, distsensefront, imu,this);
 
         //setup robot
         robot.setupRobot(true);//TODO: if motors need swapping directions, go to this method in Robot_2022FF.java and change! DO NOT CHANGE IN HERE
