@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class RobotClass {
+public class RobotClass_archaic {
     private DcMotor motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft;
     private DcMotor intake, outtake;
 
@@ -69,8 +69,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, DistanceSensor distSenseFront, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, DistanceSensor distSenseFront, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -99,8 +99,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, DistanceSensor distSenseBack, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -128,8 +128,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, DcMotor outtake, Servo bucket, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -154,8 +154,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor intake, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor intake, CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -177,8 +177,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -198,8 +198,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      CRServo duck, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              CRServo duck, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -220,8 +220,8 @@ public class RobotClass {
      * @param imu
      * @param opMode
      * */
-    public RobotClass(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
-                      DcMotor motorOuttake, BNO055IMU imu, LinearOpMode opMode){
+    public RobotClass_archaic(DcMotor motorFrontRight, DcMotor motorFrontLeft, DcMotor motorBackRight, DcMotor motorBackLeft,
+                              DcMotor motorOuttake, BNO055IMU imu, LinearOpMode opMode){
         this.motorFrontRight = motorFrontRight;
         this.motorFrontLeft = motorFrontLeft;
         this.motorBackRight = motorBackRight;
@@ -483,13 +483,13 @@ public class RobotClass {
 
     /**
      * Generic turn function, works for CW and CCW
-     * @param power power for motors, + is CW, - is CCW
+     * @param power power for motors, + is CCW, - is CW
      */
     public void turn(double power){
-        motorFrontLeft.setPower(power);
-        motorBackLeft.setPower(power);
-        motorFrontRight.setPower(-power);
-        motorBackRight.setPower(-power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
     }
 
     /**
@@ -510,7 +510,7 @@ public class RobotClass {
         }else{
             return;
         }
-//
+
         //Rotate until current angle is equal to the target angle
         //getAngle()-degrees
         if (degrees < 0){
@@ -648,7 +648,7 @@ public class RobotClass {
      * Used in gyroDriveIn
      * @param power
      * @param seconds time in seconds to drive
-     * */
+     * *///todo do we need this??
     public void gyroDriveSec(double power, double seconds) throws InterruptedException{
         //restart angle tracking
         resetAngle();
@@ -763,7 +763,7 @@ public class RobotClass {
      * @param angle direction to strafe, in degrees (0 = forward, 180 = backward)<<may change... 90 should be forward...??
      * @param seconds time to run
      * @throws InterruptedException if the robot is stopped
-     */
+     *///todo do we need this??
     public void gyroStrafeSec(double power, double angle, double seconds) throws InterruptedException{
         //restart angle tracking
         resetAngle();
@@ -938,8 +938,8 @@ public class RobotClass {
         motorBackRight.setTargetPosition(targetticks);
         motorFrontRight.setTargetPosition(targetticks);
 
-        double kp = PIDCalibration.getKp();//Todo
-        double kd = PIDCalibration.getKd();//todo
+        double kp = 1.8;//PIDCalibration.getKp();//Todo
+        double kd = 0.4;//PIDCalibration.getKd();//todo
 
 
         double dist = motorFrontLeft.getCurrentPosition();
@@ -1056,14 +1056,14 @@ public class RobotClass {
     /**
      * Get distanced travelled
      * @return Absolute value of Current position of front left motor, in ticks
-     */
+     *///todo copy?
     public double getDistanceTraveled() {
         return (motorFrontLeft.getCurrentPosition() / ticksperrev) * DRIVE_WHEEL_CIRCUMFERENCE * 6;
     }
 
     /**
      * Converts distance traveled to ticks...
-     * */
+     * *///todo also copy?
     public int distanceToTicks(double in){//CHANGE!!!!
         return (int)((in/DRIVE_WHEEL_CIRCUMFERENCE)*ticksperrev);
     }
