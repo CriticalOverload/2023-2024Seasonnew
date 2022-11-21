@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Base Test")
 public class BaseTest extends LinearOpMode {
-    private DcMotor motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight;
+    private DcMotor motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight, motorLS;
+    private Servo servo;
+    double servoPosition = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -14,6 +17,9 @@ public class BaseTest extends LinearOpMode {
         motorFrontLeft = hardwareMap.dcMotor.get("FL");
         motorBackLeft = hardwareMap.dcMotor.get("BL");
         motorBackRight = hardwareMap.dcMotor.get("BR");
+        servo = hardwareMap.servo.get("claw");
+        motorLS = hardwareMap.dcMotor.get("LS");
+        servo.setPosition(servoPosition);
 
         //reverse the needed motors
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -36,17 +42,33 @@ public class BaseTest extends LinearOpMode {
                 powerMod = 1.0;
             }
 
-            double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) + (Math.PI/4);
+
+
+
+            double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - (Math.PI/4);
             double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double rotation = gamepad1.left_stick_x;
 
-            double powerOne = r*Math.sin(angle);
-            double powerTwo = r*Math.cos(angle);
+//            double powerOne = r*Math.sin(angle);
+//            double powerTwo = r*Math.cos(angle);
+            double powerOne = r*Math.cos(angle);
+            double powerTwo = r*Math.sin(angle);
 
             motorFrontLeft.setPower((powerOne - (rotation))*powerMod);
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
+            motorLS.setPower(-gamepad2.right_stick_y * 0.5);
+
+
+            //Claw
+            if (gamepad2.dpad_up) {
+                servo.setPosition(0.5);
+            }
+            else if (gamepad2.dpad_down) {
+                servo.setPosition(1.0);
+            }
+
         }
 
 

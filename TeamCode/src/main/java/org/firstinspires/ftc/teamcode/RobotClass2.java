@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class RobotClass2 {
-    private DcMotor motorFL, motorBR, motorBL, motorFR;//our motor
+    private DcMotor motorFL, motorBR, motorBL, motorFR, motorLS;//our motor
     private DcMotor[] motors;//beware.... uhh
     private DcMotor viperslide;
     private Servo claw;
@@ -148,7 +148,7 @@ public class RobotClass2 {
         packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
         packet.put("setup","done");
-        dash.sendTelemetryPacket(packet);
+        dash.sendTelemetryPacket(packet);*/
     }
     /**
      * Reset motor encoders
@@ -461,6 +461,7 @@ public class RobotClass2 {
         integral += error*timer.seconds();
 
         power = error*kp + derivative*kd + integral*ki;
+
 
 //        addData("dist",dist);
 //        addData("motorPos",viperslide.getCurrentPosition());
