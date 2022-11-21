@@ -66,7 +66,8 @@ public class Auto_BlueTerminal extends LinearOpMode {
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
-
+        //todo: test and update
+        //also roadrunner...
         //2. drop in terminal
         //turn ccw 90
         // go forward a square
