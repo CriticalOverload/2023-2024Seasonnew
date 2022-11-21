@@ -483,13 +483,13 @@ public class RobotClass_archaic {
 
     /**
      * Generic turn function, works for CW and CCW
-     * @param power power for motors, + is CW, - is CCW
+     * @param power power for motors, + is CCW, - is CW
      */
     public void turn(double power){
-        motorFrontLeft.setPower(power);
-        motorBackLeft.setPower(power);
-        motorFrontRight.setPower(-power);
-        motorBackRight.setPower(-power);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
     }
 
     /**
@@ -510,7 +510,7 @@ public class RobotClass_archaic {
         }else{
             return;
         }
-//
+
         //Rotate until current angle is equal to the target angle
         //getAngle()-degrees
         if (degrees < 0){
@@ -648,7 +648,7 @@ public class RobotClass_archaic {
      * Used in gyroDriveIn
      * @param power
      * @param seconds time in seconds to drive
-     * */
+     * *///todo do we need this??
     public void gyroDriveSec(double power, double seconds) throws InterruptedException{
         //restart angle tracking
         resetAngle();
@@ -763,7 +763,7 @@ public class RobotClass_archaic {
      * @param angle direction to strafe, in degrees (0 = forward, 180 = backward)<<may change... 90 should be forward...??
      * @param seconds time to run
      * @throws InterruptedException if the robot is stopped
-     */
+     *///todo do we need this??
     public void gyroStrafeSec(double power, double angle, double seconds) throws InterruptedException{
         //restart angle tracking
         resetAngle();
@@ -1056,14 +1056,14 @@ public class RobotClass_archaic {
     /**
      * Get distanced travelled
      * @return Absolute value of Current position of front left motor, in ticks
-     */
+     *///todo copy?
     public double getDistanceTraveled() {
         return (motorFrontLeft.getCurrentPosition() / ticksperrev) * DRIVE_WHEEL_CIRCUMFERENCE * 6;
     }
 
     /**
      * Converts distance traveled to ticks...
-     * */
+     * *///todo also copy?
     public int distanceToTicks(double in){//CHANGE!!!!
         return (int)((in/DRIVE_WHEEL_CIRCUMFERENCE)*ticksperrev);
     }

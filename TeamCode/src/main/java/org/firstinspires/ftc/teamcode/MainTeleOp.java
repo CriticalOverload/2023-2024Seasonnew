@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ public class MainTeleOp extends LinearOpMode {
     private DcMotor motorFR,motorBR,motorFL,motorBL,slide;
     private Servo claw;
     private RobotClass2 robot;
+    private BNO055IMU imu;
     @Override
     public void runOpMode() throws InterruptedException{
         motorFR = hardwareMap.dcMotor.get("FR");
@@ -18,7 +20,7 @@ public class MainTeleOp extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("BL");
         slide = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
-        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, this, false);
+        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, imu, this, false);
         robot.setupRobot();
 
         double powerMod = 1;
