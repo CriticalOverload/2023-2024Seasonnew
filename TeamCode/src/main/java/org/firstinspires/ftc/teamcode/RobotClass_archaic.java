@@ -38,7 +38,7 @@ public class RobotClass_archaic {
 
     //other variables
     private double gain = 0.1;
-    double ticksperrev = ((((1+(46/17))) * (1+(46/11))) * 28);
+    double ticksperrev = ((((1+(46/17))) * (1+(46/11))) * 28);//maybe don't need 28
 
     //Declare an opmode and a telemetry object
     private LinearOpMode opMode;
