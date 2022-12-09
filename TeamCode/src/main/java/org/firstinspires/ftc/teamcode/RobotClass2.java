@@ -148,7 +148,7 @@ public class RobotClass2 {
         packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
         packet.put("setup","done");
-        dash.sendTelemetryPacket(packet);*/
+        dash.sendTelemetryPacket(packet);
     }
     /**
      * Reset motor encoders
