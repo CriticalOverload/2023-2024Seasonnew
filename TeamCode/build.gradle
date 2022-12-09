@@ -25,10 +25,9 @@ dependencies {
 }
 
 dependencies {
-    implementation 'org.openftc:easyopencv:1.5.2'
-}
-
-dependencies {
     implementation 'org.openftc:rev-extensions-2:1.2'
 }
 
+dependencies {
+    implementation 'org.openftc:easyopencv:1.5.2'
+}
