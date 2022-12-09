@@ -396,13 +396,13 @@ public class RobotClass2 {
 
     //auto movements and actions
     public void goToAudHigh(double power, boolean blue) throws InterruptedException{
-        moveSlides(3,power);
+//        moveSlides(3,power);
         gyroStrafeEncoder(power,-90,36);
         if(blue){
-            gyroTurn(90,power);
+            gyroTurn(-90,power);
         }
         else{
-            gyroTurn(-90,power);
+            gyroTurn(90,power);
         }
         gyroStrafeEncoder(power,90,4);
         openClaw();
@@ -414,7 +414,7 @@ public class RobotClass2 {
     }
 
     public void goToStackLow(double power, boolean blue) throws InterruptedException{
-        moveSlides(1,power);
+//        moveSlides(1,power);
         gyroStrafeEncoder(power,-90,18);
         if(blue){
             gyroTurn(-90,power);
@@ -429,6 +429,7 @@ public class RobotClass2 {
      * used by terminal autos to get from starting position to terminal
      */
     public void dropInTerminal(double power, boolean blue) throws InterruptedException{
+        //todo may need to move forward a bit
         if(blue)
             gyroTurn(90,power);
         else
