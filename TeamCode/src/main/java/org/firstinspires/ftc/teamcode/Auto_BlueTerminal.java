@@ -36,6 +36,9 @@ public class Auto_BlueTerminal extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
         robot.setupRobot();
 

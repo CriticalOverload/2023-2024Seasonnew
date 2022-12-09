@@ -6,6 +6,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -39,6 +40,16 @@ public class RobotClass2 {
     private double lastError=0;
     private double ckp, cki, ckd;//there is a c in front to remind me to CHANGE!!! TODO!!!!!!!!!!!
     private double integral=0;
+
+    //drive distance calculation
+    private final double DRIVE_WHEEL_CIRCUMFERENCE = Math.PI * 3.77953;
+    //
+    // private final double MOTOR_RPM = 435;
+    // private final double MOTOR_SPR = IDK WHAT THIS IS 60/MOTOR_RPM;//CHANGE
+    // private final double SECONDS_PER_CM = IDK WHAT THIS IS EITEHR MOTOR_SPR/DRIVE_WHEEL_CIRCUMFERENCE;
+    private final double TICKS_PER_REV = (1+(double)46/17) * (1+(double)46/17) * 28;
+    private final double TICKS_PER_IN = TICKS_PER_REV / DRIVE_WHEEL_CIRCUMFERENCE;
+
     //setup
     /**
      * Full Constructor
@@ -87,7 +98,25 @@ public class RobotClass2 {
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash = yesDash;
     }
-
+/**
+     * Base only Constructor
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash = yesDash;
+    }
     /**
      * Empty. CV testing or just for dashboard capabilities
      * */
@@ -140,6 +169,55 @@ public class RobotClass2 {
         telemetry.addData("IMU", "ready");
         telemetry.update();
     }
+/**
+     * Setup the robot and the telemetry for FTCDashboard
+     */
+    public void setupRobot_base() throws InterruptedException{
+        //reverse the needed motors here
+        for(DcMotor m : motors){
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        setIMUParameters();
+        resetEncoders();
+        resetAngle();
+
+        if(yesDash)
+            setupDashboard();
+
+        while (!imu.isGyroCalibrated()) {
+            if(yesDash){
+                addData("IMU", "calibrating...");
+                update();
+                Thread.sleep(50);
+            }
+            else {
+                telemetry.addData("IMU", "calibrating...");
+                telemetry.update();
+                Thread.sleep(50);
+            }
+        }
+
+        telemetry.addData("IMU", "ready");
+        telemetry.update();
+    }
+    /**
+     * Setup the robot and the telemetry for FTCDashboard
+     */
+    public void setupRobot_base_noimu() throws InterruptedException{
+        //reverse the needed motors here
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
+        motorFL.setDirection(DcMotor.Direction.REVERSE);
+        for(DcMotor m : motors){
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        resetEncoders();
+
+        if(yesDash)
+            setupDashboard();
+
+        telemetry.addData("IMU", "ready");
+        telemetry.update();
+    }
 
     /**
      * Setup to use FTCDashboard
@@ -148,7 +226,7 @@ public class RobotClass2 {
         packet = new TelemetryPacket();
         dash = FtcDashboard.getInstance();
         packet.put("setup","done");
-        dash.sendTelemetryPacket(packet);*/
+        dash.sendTelemetryPacket(packet);
     }
     /**
      * Reset motor encoders
@@ -371,7 +449,7 @@ public class RobotClass2 {
      * @throws InterruptedException if robot is stopped
      */
     public void gyroStrafeEncoder(double power, double angle, double in) throws InterruptedException{
-        double ticks = in * 34.225;//TICKS_PER_IN;
+        double ticks = in * TICKS_PER_IN;
 
         //convert direction (degrees) into radians
         double newDirection = angle * Math.PI/180 - Math.PI/4;
@@ -382,7 +460,7 @@ public class RobotClass2 {
 
         resetEncoders();
         resetAngle();
-//        setNewGain(0.02);
+        //setNewGain(0.02);
 
         while(Math.abs(motorFL.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
             double correction = getCorrection();
@@ -394,6 +472,38 @@ public class RobotClass2 {
         resetEncoders();
     }
 
+
+    /**
+     * Strafe in any direction using encoders.
+     * use this
+     * @param power
+     * @param angle Direction to strafe (90 = forward, 0 = right, -90 = backwards, 180 = left)
+     * @param in inches
+     * @throws InterruptedException if robot is stopped
+     */
+    public void gyroStrafeEncoder_noimu(double power, double angle, double in) throws InterruptedException{
+        double ticks = in * TICKS_PER_IN;
+
+        //convert direction (degrees) into radians
+        double newDirection = angle * Math.PI/180 - Math.PI/4;
+
+        //calculate powers needed using direction
+        double leftPower = Math.cos(newDirection) * power;
+        double rightPower = Math.sin(newDirection) * power;
+
+        resetEncoders();
+        // resetAngle();
+        //setNewGain(0.02);
+
+        while(Math.abs(motorFL.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
+            // double correction = getCorrection();
+            tankDrive(leftPower, rightPower);
+        }
+        completeStop();
+        Thread.sleep(250);
+        // resetAngle();
+        resetEncoders();
+    }
     //auto movements and actions
     public void goToAudHigh(double power, boolean blue) throws InterruptedException{
         moveSlides(3,power);

@@ -21,6 +21,9 @@ public class MainTeleOp extends LinearOpMode {
 
         slide = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
+
+//todo add imu!!!!!!!!
+        
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, imu, this, false);
         robot.setupRobot();
 
@@ -84,40 +87,40 @@ public class MainTeleOp extends LinearOpMode {
 //            motorFR.setPower((rightPower + (rotation))*powerMod);
 //            motorBL.setPower((rightPower - (rotation))*powerMod);
 //            motorBR.setPower((leftPower + (rotation))*powerMod);
-            motorLS.setPower(-gamepad2.right_stick_y * 0.5);
+            slide.setPower(-gamepad2.right_stick_y * 0.5);
 
 
             //Claw
             if (gamepad2.dpad_up) {
-                servo.setPosition(0.5);
+                claw.setPosition(0.5);
             }
             else if (gamepad2.dpad_down) {
-                servo.setPosition(1.0);
+                claw.setPosition(1.0);
             }
 
             //Linear Slide
             if (gamepad2.a) {
-                motorLS.getCurrentPosition();
-                motorLS.setTargetPosition((int)groundRN);
-                motorLS.setPower(.5); /*figure out what value is best for this*/
+                slide.getCurrentPosition();
+                slide.setTargetPosition((int)groundRN);
+                slide.setPower(.5); /*figure out what value is best for this*/
             }
             else if (gamepad2.x) {
-                motorLS.getCurrentPosition();
-                motorLS.setTargetPosition((int)smallRN);
-                motorLS.setPower(.5); /*figure out what value is best for this*/
+                slide.getCurrentPosition();
+                slide.setTargetPosition((int)smallRN);
+                slide.setPower(.5); /*figure out what value is best for this*/
             }
             else if (gamepad2.b) {
-                motorLS.getCurrentPosition();
-                motorLS.setTargetPosition((int)medRN);
-                motorLS.setPower(.5); /*figure out what value is best for this*/
+                slide.getCurrentPosition();
+                slide.setTargetPosition((int)medRN);
+                slide.setPower(.5); /*figure out what value is best for this*/
             }
             else if (gamepad2.y) {
-                motorLS.getCurrentPosition();
-                motorLS.setTargetPosition((int)highEP);
-                motorLS.setPower(.5); /*figure out what value is best for this*/
+                slide.getCurrentPosition();
+                slide.setTargetPosition((int)highEP);
+                slide.setPower(.5); /*figure out what value is best for this*/
             }
             else {
-                motorLS.setPower(0);
+                slide.setPower(0);
 
             }
 

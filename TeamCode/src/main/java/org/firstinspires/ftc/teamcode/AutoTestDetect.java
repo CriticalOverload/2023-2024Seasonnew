@@ -22,6 +22,7 @@ public class AutoTestDetect extends LinearOpMode {
     int height = 480;
     CVClass mainPipeline;
     CVClassTry2 try2;
+    
 //    OpenCvInternalCamera2 phonecam;
 
     @Override
