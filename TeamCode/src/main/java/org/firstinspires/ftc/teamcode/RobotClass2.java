@@ -22,6 +22,9 @@ public class RobotClass2 {
     private DcMotor viperslide;
     private Servo claw;
 
+    private DcMotor leftEncoder, rightEncoder, backEncoder;
+    boolean deadWheels = false;
+
     //imu stuff
     private BNO055IMU imu;
     private Orientation angles, lastAngles, startAngles;
@@ -50,9 +53,47 @@ public class RobotClass2 {
     private final double TICKS_PER_REV = (1+(double)46/17) * (1+(double)46/17) * 28;
     private final double TICKS_PER_IN = TICKS_PER_REV / DRIVE_WHEEL_CIRCUMFERENCE;
 
+    // private final double ENCODER_WHEEL_CIRCUMFERENCE = Math.Pi * diameter!!!!!!!!;
+    // private final double ENCODER_TICKS_PER_REV = INSERTNUMBERHERE;
+    private final double ENCODER_TICKS_PER_IN = 307.699557;
+
     //setup
     /**
-     * Full Constructor
+     * Full Constructor, Todo Add encoders!!!!!!!!
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param leftEncoder Left encoder
+     * @param rightEncoder right encoder
+     * @param backEncoder back encoder
+     * @param viperslide slide motor
+     * @param claw claw servo
+     * @param imu imu
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL, DcMotor motorBR, DcMotor leftEncoder, DcMotor rightEncoder, DcMotor backEncoder, DcMotor viperslide, Servo claw, BNO055IMU imu, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.leftEncoder = leftEncoder;
+        this.rightEncoder = rightEncoder;
+        this.backEncoder = backEncoder;
+        
+        this.viperslide = viperslide;
+        this.claw = claw;
+        this.imu = imu;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash=yesDash;
+        deadWheels = true;
+    }
+
+    /**
+     * Full Constructor without encoders
      * @param motorFL front left motor
      * @param motorFR front right motor
      * @param motorBL back left motor
@@ -63,11 +104,15 @@ public class RobotClass2 {
      * @param opMode From the opMode we get telemetry
      * @param yesDash if we're using the dashboard
      * */
-    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, DcMotor viperslide, Servo claw, BNO055IMU imu, LinearOpMode opMode, boolean yesDash){
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL, DcMotor motorBR, DcMotor viperslide, Servo claw, BNO055IMU imu, LinearOpMode opMode, boolean yesDash){
         this.motorFL = motorFL;
         this.motorFR = motorFR;
         this.motorBL = motorBL;
         this.motorBR = motorBR;
+        this.leftEncoder = leftEncoder;
+        this.rightEncoder = rightEncoder;
+        this.backEncoder = backEncoder;
+
         this.viperslide = viperslide;
         this.claw = claw;
         this.imu = imu;
@@ -75,6 +120,7 @@ public class RobotClass2 {
         this.telemetry = opMode.telemetry;
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash=yesDash;
+        deadWheels = true;
     }
 
     /**
@@ -98,8 +144,40 @@ public class RobotClass2 {
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash = yesDash;
     }
-/**
-     * Base only Constructor
+
+    /**
+     * Base only + encoders Constructor 
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param leftEncoder Left encoder
+     * @param rightEncoder right encoder
+     * @param backEncoder back encoder
+     * @param imu imu
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL,DcMotor motorBR, DcMotor leftEncoder, DcMotor rightEncoder, DcMotor backEncoder, BNO055IMU imu, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.leftEncoder = leftEncoder;
+        this.rightEncoder = rightEncoder;
+        this.backEncoder = backEncoder;
+        
+        
+        this.imu = imu;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash = yesDash;
+        deadWheels = true;
+    }
+
+    /**
+     * Base only no IMU Constructor
      * @param motorFL front left motor
      * @param motorFR front right motor
      * @param motorBL back left motor
@@ -117,6 +195,7 @@ public class RobotClass2 {
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash = yesDash;
     }
+    
     /**
      * Empty. CV testing or just for dashboard capabilities
      * */
@@ -140,7 +219,7 @@ public class RobotClass2 {
      * Setup the robot and the telemetry for FTCDashboard
      */
     public void setupRobot() throws InterruptedException{
-        //reverse the needed motors here
+        reverseMotors();
         for(DcMotor m : motors){
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -169,11 +248,11 @@ public class RobotClass2 {
         telemetry.addData("IMU", "ready");
         telemetry.update();
     }
-/**
+    /**
      * Setup the robot and the telemetry for FTCDashboard
      */
     public void setupRobot_base() throws InterruptedException{
-        //reverse the needed motors here
+        reverseMotors();
         for(DcMotor m : motors){
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -200,13 +279,12 @@ public class RobotClass2 {
         telemetry.addData("IMU", "ready");
         telemetry.update();
     }
+    
     /**
      * Setup the robot and the telemetry for FTCDashboard
      */
     public void setupRobot_base_noimu() throws InterruptedException{
-        //reverse the needed motors here
-        motorBL.setDirection(DcMotor.Direction.REVERSE);
-        motorFL.setDirection(DcMotor.Direction.REVERSE);
+        reverseMotors();
         for(DcMotor m : motors){
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
@@ -219,6 +297,11 @@ public class RobotClass2 {
         telemetry.update();
     }
 
+    public void reverseMotors() throws InterruptedException{
+        //reverse needed motors here!!
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
+        motorFL.setDirection(DcMotor.Direction.REVERSE);
+    }
     /**
      * Setup to use FTCDashboard
      * */
@@ -235,6 +318,11 @@ public class RobotClass2 {
         for(DcMotor m : motors) {
             m.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+        if(deadWheels){
+            leftEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            backEncoder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
         lastError = 0;
     }
@@ -416,6 +504,54 @@ public class RobotClass2 {
         resetAngle();
     }
 
+    
+    /**
+     * Make precise turn using gyro
+     * no PID
+     * + is ccw, - is cw
+     * @param degrees
+     * @param power
+     * */
+    public void encoderTurn(int degrees, double power) throws InterruptedException{
+        //restart angle tracking
+        resetAngle();
+        if(degrees == 0)
+            return;
+        if(degrees < 0){
+            turn(power* -1);
+        }
+        else{
+            turn(power);
+        }
+
+        //Rotate until current angle is equal to the target angle
+        //getAngle()-degrees
+        /*while(opMode.opModeIsActive() && Math.abs(getAngle()-degrees) > 10){
+            composeAngleTelemetry();
+            telemetry.addData("Target angle", degrees);
+            telemetry.update();
+        }*///doesn't work the way we want it to... may edit later but not urgent todo
+        if (degrees < 0){
+            while (opMode.opModeIsActive() && getAngle() > degrees+10){
+                composeAngleTelemetry();
+                //display the target angle
+                telemetry.addData("Target angle", degrees);
+                telemetry.update();
+            }
+        }else{
+            while (opMode.opModeIsActive() && getAngle() < degrees-10) {
+                composeAngleTelemetry();
+                //display the target angle
+                telemetry.addData("Target angle", degrees);
+                telemetry.update();
+            }
+        }
+
+        completeStop();
+        //Wait .5 seconds to ensure robot is stopped before continuing
+        Thread.sleep(250);
+        resetAngle();
+    }
     //add pid gyro turn?????....
 
     /**
@@ -471,6 +607,54 @@ public class RobotClass2 {
         resetAngle();
         resetEncoders();
     }
+
+    /**
+     * Strafe in any direction using encoders.
+     * use this
+     * @param power
+     * @param angle Direction to strafe (90 = forward, 0 = right, -90 = backwards, 180 = left)
+     * @param in inches
+     * @throws InterruptedException if robot is stopped
+     */
+    public void gyroStrafeEncoder_deadWheels(double power, double angle, double in) throws InterruptedException{
+        double ticks = in * ENCODER_TICKS_PER_IN;//Todo CHANGE FOR DEADWHEELS!!!!!!!!
+
+
+        //convert direction (degrees) into radians
+        double newDirection = angle * Math.PI/180 - Math.PI/4;
+
+        //calculate powers needed using direction
+        double leftPower = Math.cos(newDirection) * power;
+        double rightPower = Math.sin(newDirection) * power;
+
+        resetEncoders();
+        resetAngle();
+        //setNewGain(0.02);
+        DcMotor encoder;
+        //gyroStrafeEncoder_deadWheels(1, -90, 3); newDirection = -3p/4
+        //gyroStrafeEncoder_deadWheels(1, 90, 3); newDirection = p/4
+        //gyroStrafeEncoder_deadWheels(1, 0, 3); newDirection = -p/4
+        //gyroStrafeEncoder_deadWheels(1, 180, 3); newDirection = 3p/4
+        
+        if (newDirection == Math.PI/4 || newDirection == -3*Math.PI/4) {
+            encoder = leftEncoder;
+        }
+        else{
+            encoder = backEncoder;
+        }
+        
+
+        while(Math.abs(encoder.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
+            double correction = getCorrection();
+            correctedTankStrafe(leftPower, rightPower, correction);
+            //todo adjust to have PID tuning stuff
+        }
+        completeStop();
+        Thread.sleep(250);
+        resetAngle();
+        resetEncoders();
+    }
+
 
 
     /**
