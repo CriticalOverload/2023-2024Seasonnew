@@ -112,10 +112,6 @@ public class RobotClass2 {
         this.motorFR = motorFR;
         this.motorBL = motorBL;
         this.motorBR = motorBR;
-        this.leftEncoder = leftEncoder;
-        this.rightEncoder = rightEncoder;
-        this.backEncoder = backEncoder;
-
         this.viperslide = viperslide;
         this.claw = claw;
         this.imu = imu;
@@ -123,7 +119,6 @@ public class RobotClass2 {
         this.telemetry = opMode.telemetry;
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash=yesDash;
-        deadWheels = true;
     }
 
     /**

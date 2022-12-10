@@ -29,6 +29,6 @@ public class AutoTesting extends LinearOpMode {
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, this, false);
         robot.setupRobot_base_noimu();
         waitForStart();
-        robot.gyroStrafeEncoder_noimu(0.5,90,24);
+        robot.gyroStrafeEncoder_noimu(0.5,0,24);
     }
 }
