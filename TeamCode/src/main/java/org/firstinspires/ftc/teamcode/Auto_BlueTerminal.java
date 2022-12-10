@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -36,9 +37,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
         robot.setupRobot();
 
@@ -77,23 +76,22 @@ public class Auto_BlueTerminal extends LinearOpMode {
         //drop the cone
         robot.dropInTerminal(0.5, true);
         //3. turn and go to cone stack and align vertically
-        robot.gyroTurn(90,0.5);
         robot.gyroStrafeEncoder(0.5,180,6);
         robot.gyroStrafeEncoder(0.5,90,48);
-        robot.gyroTurn(-90,0.5);
-        robot.moveSlides(2,0.5);
+//        robot.moveSlides(2,0.5);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
-        robot.pickUp(0.5);
+//        robot.pickUp(0.5);
         //5. place depending on signal
         switch(signal){
             case 1:
                 //place in high close to audience
                 robot.goToAudHigh(0.5,true);
                 //go back to pick up cone
-                robot.gyroTurn(90,0.5);
+                robot.gyroTurn(-90,0.5);
                 //drive to wall...
+                robot.gyroStrafeEncoder(90,0.5,36);
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
                 robot.goToStackLow(0.5,true);
@@ -108,6 +106,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
+                robot.gyroStrafeEncoder(0.5,90,18);
                 robot.pickUp(0.5);
                 //now place with respect to parking...
                 if(signal == 2){
@@ -116,6 +115,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
                     robot.gyroStrafeEncoder(0.5,0,12);
                 }
                 else{
+                    robot.moveSlides(2,0.5);
                     robot.gyroStrafeEncoder(0.5,-90,48);
                     robot.gyroTurn(180,0.5);
                     //l shape... need to test reliability of diagonal strafing
