@@ -44,6 +44,9 @@ public class RobotClass2 {
     private double ckp, cki, ckd;//there is a c in front to remind me to CHANGE!!! TODO!!!!!!!!!!!
     private double integral=0;
 
+    private double robotIntegral=0;
+    private double robotLastError=0;
+
     //drive distance calculation
     private final double DRIVE_WHEEL_CIRCUMFERENCE = Math.PI * 3.77953;
     //
@@ -166,8 +169,6 @@ public class RobotClass2 {
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.backEncoder = backEncoder;
-        
-        
         this.imu = imu;
         this.opMode = opMode;
         this.telemetry = opMode.telemetry;
@@ -732,40 +733,6 @@ public class RobotClass2 {
     }
 
     //attachments
-    /**
-     * Reset slides PID. MUST DO BEFORE EACH CALL!!!!!
-     * */
-    public void resetPID(){
-        integral = 0;
-        lastError = 0;
-    }
-
-    /**
-     * Tuning PID for the slides
-     * */
-    public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) {
-        //go distance, calculating power based on distance
-        double power, error, derivative;
-
-        error = dist - viperslide.getCurrentPosition();
-
-        derivative = (error-lastError)/timer.seconds();
-        lastError = error;
-
-        integral += error*timer.seconds();
-
-        power = error*kp + derivative*kd + integral*ki;
-
-
-//        addData("dist",dist);
-//        addData("motorPos",viperslide.getCurrentPosition());
-//        addData("error", error);
-//        addData("derivative", derivative);
-//        addData("integral", integral);
-//        addData("power", power);
-//        update();
-        return power;
-    }
 
     /**
      * Move slide to position
@@ -819,5 +786,73 @@ public class RobotClass2 {
 
     public void update(){
         dash.sendTelemetryPacket(packet);
+    }
+
+    //pid section
+    /**
+     * Reset slides PID. MUST DO BEFORE EACH CALL!!!!!
+     * */
+    public void resetPID(){
+        integral = 0;
+        lastError = 0;
+    }
+    /**
+     * Tuning PID for the slides
+     * */
+    public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) {
+        //go distance, calculating power based on distance
+        double power, error, derivative;
+
+        error = dist - viperslide.getCurrentPosition();
+
+        derivative = (error-lastError)/timer.seconds();
+        lastError = error;
+
+        integral += error*timer.seconds();
+
+        power = error*kp + derivative*kd + integral*ki;
+
+
+//        addData("dist",dist);
+//        addData("motorPos",viperslide.getCurrentPosition());
+//        addData("error", error);
+//        addData("derivative", derivative);
+//        addData("integral", integral);
+//        addData("power", power);
+//        update();
+        return power;
+    }
+
+    /**
+     * Reset slides PID. MUST DO BEFORE EACH CALL!!!!!
+     * */
+    public void resetRobotPID(){
+        robotIntegral = 0;
+        robotLastError = 0;
+    }
+    /**
+     * Tuning PID for the robot
+     * */
+    public double robotPidTuner_noLoop(int dist, double kp, double kd, double ki, DcMotor encoder, ElapsedTime timer) {
+        //go distance, calculating power based on distance
+        double power, error, derivative;
+
+        error = dist - encoder.getCurrentPosition();//??
+
+        derivative = (error-robotLastError)/timer.seconds();
+        robotLastError = error;
+
+        robotIntegral += error*timer.seconds();
+
+        power = error*kp + derivative*kd + robotIntegral*ki;
+
+//        addData("dist",dist);
+//        addData("motorPos",viperslide.getCurrentPosition());
+//        addData("error", error);
+//        addData("derivative", derivative);
+//        addData("integral", integral);
+//        addData("power", power);
+//        update();
+        return power;
     }
 }

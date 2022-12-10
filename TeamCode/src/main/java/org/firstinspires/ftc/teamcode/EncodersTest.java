@@ -15,6 +15,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 @Autonomous(name="Testing Dead Wheels")
 public class EncodersTest extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
+    private DcMotor leftEncoder, rightEncoder, backEncoder;
 
     private BNO055IMU imu;
 
@@ -26,13 +27,15 @@ public class EncodersTest extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("BR");
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
-        
+        leftEncoder = hardwareMap.dcMotor.get("encLeft");
+        rightEncoder = hardwareMap.dcMotor.get("encRight");
+        backEncoder = hardwareMap.dcMotor.get("encBack");
+
         imu = hardwareMap.get(BNO055IMU.class,"imu");
-        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, imu, this, false);
+        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, leftEncoder, rightEncoder, backEncoder, imu, this, false);
         robot.setupRobot();
 
-        
         waitForStart();
-        
+        robot.gyroStrafeEncoder_deadWheels(0.5, 90, 24);
     }
 }
