@@ -45,7 +45,7 @@ public class CVClass extends OpenCvPipeline{
         //https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
         //also test using RETR_TREE idk what the difference is. probably just method todo
 
-        List<MatOfPoint> yellowContours = getYellow(input);
+        List<MatOfPoint> yellowContours = getGreen(input);
         blackContours = getBlack(input);//may make this black?
         input.copyTo(output);
 
@@ -116,7 +116,7 @@ public class CVClass extends OpenCvPipeline{
     //blog.jcole.us/2017/04/13/wireless-programming-for-ftc-robots
     //related
     //https://alloyui.com/examples/color-picker/hsv.html
-    public List<MatOfPoint> getYellow(Mat input){
+    public List<MatOfPoint> getGreen(Mat input){
         Mat output = new Mat();//output mat
         Mat hsv = new Mat();//after hsv
         Mat blur = new Mat();//after blur

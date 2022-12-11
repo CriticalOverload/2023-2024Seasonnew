@@ -42,7 +42,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
 
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
         robot.setupRobot();
-        robot.reverseMotors();
+
 //        int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 ////        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
 //        mainPipeline = new CVClass();//create new pipeline
@@ -76,13 +76,14 @@ public class Auto_BlueTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
+        robot.moveSlides(3,0.5);
         robot.dropInTerminal(0.5, true);
         //3. turn and go to cone stack and align vertically
 //        robot.gyroTurn(90,0.5);
-        robot.gyroStrafeEncoder(0.5,180,6);
-        robot.gyroStrafeEncoder(0.5,90,48);
-//        robot.gyroTurn(-90,0.5);
+        robot.gyroStrafeEncoder_noimu(0.5,180,48);
         robot.moveSlides(2,0.5);
+        robot.gyroStrafeEncoder_noimu(0.5,90,3);
+//        robot.gyroTurn(-90,0.5);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
@@ -95,13 +96,13 @@ public class Auto_BlueTerminal extends LinearOpMode {
                 //go back to pick up cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
-                robot.gyroStrafeEncoder(90,0.5,36);
+                robot.gyroStrafeEncoder_noimu(90,0.5,36);
 
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
                 robot.goToStackLow(0.5,true);
                 //park
-                robot.gyroStrafeEncoder(0.5,180,12);
+                robot.gyroStrafeEncoder_noimu(0.5,180,12);
                 break;
             case 2:
             case 3:
@@ -111,25 +112,25 @@ public class Auto_BlueTerminal extends LinearOpMode {
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
-                robot.gyroStrafeEncoder(0.5,90,18);
+                robot.gyroStrafeEncoder_noimu(0.5,90,18);
 
                 robot.pickUp(0.5);
                 //now place with respect to parking...
                 if(signal == 2){
                     //place in the high closest to audience
                     robot.goToAudHigh(0.5,true);
-                    robot.gyroStrafeEncoder(0.5,0,12);
+                    robot.gyroStrafeEncoder_noimu(0.5,0,12);
                 }
                 else{
                     robot.moveSlides(2,0.5);
 
-                    robot.gyroStrafeEncoder(0.5,-90,48);
+                    robot.gyroStrafeEncoder_noimu(0.5,-90,48);
                     robot.gyroTurn(180,0.5);
                     //l shape... need to test reliability of diagonal strafing
-                    robot.gyroStrafeEncoder(0.5,180,12);
-                    robot.gyroStrafeEncoder(0.5,90,18);
+                    robot.gyroStrafeEncoder_noimu(0.5,180,12);
+                    robot.gyroStrafeEncoder_noimu(0.5,90,18);
                     robot.openClaw();
-                    robot.gyroStrafeEncoder(0.5, -90, 6);
+                    robot.gyroStrafeEncoder_noimu(0.5, -90, 6);
                 }
                 break;
         }
