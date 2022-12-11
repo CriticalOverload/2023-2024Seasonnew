@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.vuforia.Box3D;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -15,18 +13,13 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Config
 public class CVClass extends OpenCvPipeline{
-    public static double satlow = 0;
-    public static double sathi = 255;
-    public static double vallow = 80;
-    public static double valhi = 0;
-    public static double pdiffs = 20;
+    public static double pdiffs = 30;
     private double boxPDiffs = 0.0;
     private List<MatOfPoint> blackContours;
     Mat output = new Mat();//output mat
 
-    Rect blackbox,yellowbox;//draws box
+    Rect blackbox, greenbox;//draws box
 
     int signal = 0; //1 left, 2 mid, 3 right. 0 means default to left.
 
@@ -44,28 +37,28 @@ public class CVClass extends OpenCvPipeline{
         //.... thanks opencv
         //https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
         //also test using RETR_TREE idk what the difference is. probably just method todo
-
-        List<MatOfPoint> yellowContours = getGreen(input);
-        blackContours = getBlack(input);//may make this black?
         input.copyTo(output);
+        List<MatOfPoint> greenContours = getGreen(input);
+        blackContours = getBlack(input);//may make this black?
+
 
         //need to draw the rectangles first...
 
-        if(yellowContours.size() > 0){
+        if(greenContours.size() > 0){
             double max = 0;
             int maxInd = 0;
-            for(int i = 0; i < yellowContours.size(); i++){//loop through all the contours, and find the largest box
-                double area = Imgproc.contourArea(yellowContours.get(i));
+            for(int i = 0; i < greenContours.size(); i++){//loop through all the contours, and find the largest box
+                double area = Imgproc.contourArea(greenContours.get(i));
                 if(area > max){
                     max = area;
                     maxInd = i;
                 }
             }
             //draw a box of the largest one of single color
-            Rect largestRect = Imgproc.boundingRect(yellowContours.get(maxInd));
-            yellowbox = largestRect;
-            Scalar boxColor = new Scalar(0, 255, 255);//not white... something!!
-            Imgproc.rectangle(output, yellowbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
+            Rect largestRect = Imgproc.boundingRect(greenContours.get(maxInd));
+            greenbox = largestRect;
+            Scalar boxColor = new Scalar(38, 255, 0);//not white... something!!
+            Imgproc.rectangle(output, greenbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
         }
 
         if(blackContours.size()> 0){
@@ -85,11 +78,11 @@ public class CVClass extends OpenCvPipeline{
             Imgproc.rectangle(output, blackbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
         }
 
-        if(yellowContours.size() > 0){//in other words, it found yellow
+        if(greenContours.size() > 0){//in other words, it found green
             if(blackContours.size() > 0){//found black... change height!!!
-                boxPDiffs = 200.0*Math.abs(blackbox.height-yellowbox.height)/(double)(blackbox.height+ yellowbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
-
-                if (boxPDiffs < pdiffs){
+                boxPDiffs = 200.0*Math.abs(blackbox.height-greenbox.height)/(double)(blackbox.height+ greenbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
+                double boxDists = Math.sqrt(Math.pow(blackbox.x-greenbox.x,2)+Math.pow(blackbox.y-greenbox.y,2));
+                if (boxPDiffs < pdiffs && boxDists < 20){
                     //yellow and black
                     //around 123ish
                     signal = 2;
@@ -116,6 +109,8 @@ public class CVClass extends OpenCvPipeline{
     //blog.jcole.us/2017/04/13/wireless-programming-for-ftc-robots
     //related
     //https://alloyui.com/examples/color-picker/hsv.html
+    //better one:
+    //https://colorpicker.me/#8a2b48
     public List<MatOfPoint> getGreen(Mat input){
         Mat output = new Mat();//output mat
         Mat hsv = new Mat();//after hsv
@@ -137,15 +132,14 @@ public class CVClass extends OpenCvPipeline{
 
         //find contours:
         //using HSV
-        double hue = 25;
-        double sensitivity = 10;//to adjust for slight variations. Ewww that's a giant sensitivity...
+        double hue = 80;
+        double sensitivity = 15;//to adjust for slight variations. Ewww that's a giant sensitivity...
 
 //        Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
-        Scalar lowBound = new Scalar(hue-sensitivity,100,127);//lower bound
-        Scalar hiBound = new Scalar(hue+sensitivity,255,255);//higher bound
+        Scalar lowBound = new Scalar(hue/2-sensitivity,90,127);//lower bound
+        Scalar hiBound = new Scalar(hue/2+sensitivity,255,255);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
-
         return contours;
     }
 
@@ -164,12 +158,10 @@ public class CVClass extends OpenCvPipeline{
         input.copyTo(output);//don't modify inputs
 
         //using HSV
-
-        //for black, sat and value matter but hue doesn't really.
-        saturation = 0;
-        value = 255;
-        sensitivity = 30;//to adjust for slight variations. Ewww that's a giant sensitivity...
-
+        double satlow = 0;
+        double sathi = 255;
+        double vallow = 0;
+        double valhi = 30;
         //step 1: blur
         Imgproc.GaussianBlur(output, blur, new Size(5,5), 0);//source, destination, size of blur, sigmax (not too important) todo
 
