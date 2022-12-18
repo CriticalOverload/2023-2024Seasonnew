@@ -22,10 +22,10 @@ public class MainTeleOp extends LinearOpMode {
         slide = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
 
-//todo add imu!!!!!!!!
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
         
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, imu, this, false);
-        robot.setupRobot_base_slide_noimu();
+        robot.setupRobot();
 
         double powerMod = 1;
         telemetry.addData("setup?", true);
@@ -35,18 +35,21 @@ public class MainTeleOp extends LinearOpMode {
         int MOTOR_TICK_COUNTS = 384;
         waitForStart();
         while(opModeIsActive()){
-
             //slides
             if(gamepad1.a){
-                //set slide
+                robot.moveSlides(0,0.5);
             }
             if(gamepad1.b){
-                //set slide
+                robot.moveSlides(2,0.5);
             }
             if(gamepad1.x){
-                //set slide
+                robot.moveSlides(1,0.5);
             }
-            slide.setPower(gamepad2.right_stick_y);//manual adjustment
+            if(gamepad1.y){
+                robot.moveSlides(3,0.5);
+            }
+
+            slide.setPower(gamepad2.right_stick_y*2);
 
             //claw
             if(gamepad2.left_bumper){
@@ -76,54 +79,12 @@ public class MainTeleOp extends LinearOpMode {
             motorBL.setPower((powerTwo - (rotation))*powerMod);
             motorBR.setPower((powerOne + (rotation))*powerMod);
 
-            double circumference = 4.409;//circumference of pulley for hub
-            double groundRN = 2/circumference; // rotations needed to reach point from 0
-            double smallRN =16/circumference;
-            double medRN =26/circumference;
-            double highEP =37/circumference;// (inches from ground / circumference)* ticks
 
 
 //            motorFL.setPower((leftPower - (rotation))*powerMod);
 //            motorFR.setPower((rightPower + (rotation))*powerMod);
 //            motorBL.setPower((rightPower - (rotation))*powerMod);
 //            motorBR.setPower((leftPower + (rotation))*powerMod);
-            slide.setPower(-gamepad2.right_stick_y*2);
-
-
-            //Claw
-            if (gamepad2.dpad_up) {
-                claw.setPosition(0.5);
-            }
-            else if (gamepad2.dpad_down) {
-                claw.setPosition(-1.0);
-            }
-
-            //Linear Slide
-            if (gamepad2.a) {
-                slide.getCurrentPosition();
-                slide.setTargetPosition((int)groundRN);
-                slide.setPower(.5); /*figure out what value is best for this*/
-            }
-            else if (gamepad2.x) {
-                slide.getCurrentPosition();
-                slide.setTargetPosition((int)smallRN);
-                slide.setPower(.5); /*figure out what value is best for this*/
-            }
-            else if (gamepad2.b) {
-                slide.getCurrentPosition();
-                slide.setTargetPosition((int)medRN);
-                slide.setPower(.5); /*figure out what value is best for this*/
-            }
-            else if (gamepad2.y) {
-                slide.getCurrentPosition();
-                slide.setTargetPosition((int)highEP);
-                slide.setPower(.5); /*figure out what value is best for this*/
-            }
-            else {
-                slide.setPower(0);
-
-            }
-
 
             telemetry.addData("Slide position",slide.getCurrentPosition());
             telemetry.update();

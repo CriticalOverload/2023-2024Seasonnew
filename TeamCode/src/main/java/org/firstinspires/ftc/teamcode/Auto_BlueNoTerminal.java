@@ -6,10 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
 
 @Autonomous(name="Auto Blue No Terminal")
 public class Auto_BlueNoTerminal extends LinearOpMode {
@@ -92,7 +89,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
         switch(signal){
             case 1:
                 //place in high close to audience
-                robot.goToAudHigh(0.5,true);
+                robot.goToHigh(0.5,true);
                 //go back to pick up cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
@@ -100,7 +97,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
 
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //park
                 robot.gyroStrafeEncoder_noimu(0.5,180,12);
                 break;
@@ -108,7 +105,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
             case 3:
             default:
                 //place in low close to stack
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
@@ -118,7 +115,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
                 //now place with respect to parking...
                 if(signal == 2){
                     //place in the high closest to audience
-                    robot.goToAudHigh(0.5,true);
+                    robot.goToHigh(0.5,true);
                     robot.gyroStrafeEncoder_noimu(0.5,0,12);
                 }
                 else{

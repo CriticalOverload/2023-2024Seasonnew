@@ -102,7 +102,7 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         robot.gyroTurn(-90,0.5);
         robot.gyroStrafeEncoder(0.5,90,18);
         // robot.moveSlides(2,0.5);
-        robot.gyroTurn(90,0.5);
+        robot.gyroTurn(-90,0.5);
         robot.gyroStrafeEncoder(0.5,90,18);
         robot.pickUp(0.5);
         robot.gyroStrafeEncoder(0.5,-90,18);

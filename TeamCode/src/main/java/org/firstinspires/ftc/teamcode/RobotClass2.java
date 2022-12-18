@@ -6,7 +6,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -62,7 +61,7 @@ public class RobotClass2 {
 
     //setup
     /**
-     * Full Constructor, Todo Add encoders!!!!!!!!
+     * Full Constructor
      * @param motorFL front left motor
      * @param motorFR front right motor
      * @param motorBL back left motor
@@ -244,6 +243,7 @@ public class RobotClass2 {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         viperslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         setIMUParameters();
         resetEncoders();
         resetSlides();
@@ -734,16 +734,16 @@ public class RobotClass2 {
         resetEncoders();
     }
     //auto movements and actions
-    public void goToAudHigh(double power, boolean blue) throws InterruptedException{
+    public void goToHigh(double power, boolean blue) throws InterruptedException{
         // moveSlides(3,power);
-        gyroStrafeEncoder_noimu(power,-90,36);
+        gyroStrafeEncoder(power,-90,36);
         if(blue){
             gyroTurn(90,power);
         }
         else{
             gyroTurn(-90,power);
         }
-        gyroStrafeEncoder_noimu(power,90,4);
+        gyroStrafeEncoder(power,90,4);
         openClaw();
     }
 
@@ -752,27 +752,28 @@ public class RobotClass2 {
         closeClaw();
     }
 
-    public void goToStackLow(double power, boolean blue) throws InterruptedException{
+    public void goToLow(double power, boolean blue) throws InterruptedException{
         // moveSlides(1,power);
-        gyroStrafeEncoder_noimu(power,-90,18);
+        gyroStrafeEncoder(power,-90,18);
         if(blue){
             gyroTurn(-90,power);
         }
         else{
             gyroTurn(90,power);
         }
+        gyroStrafeEncoder(power,90,2);
         openClaw();
+        gyroStrafeEncoder(power,-90,2);
     }
 
     /**
      * used by terminal autos to get from starting position to terminal
      */
     public void dropInTerminal(double power, boolean blue) throws InterruptedException{
+        int mod = 1;
         if(blue)
-            gyroTurn(90,power);
-        else
-            gyroTurn(-90,power);
-        gyroStrafeEncoder_noimu(power,90,24);
+            mod=-1;
+        gyroStrafeEncoder(power*mod,0,20);
         openClaw();
     }
 
@@ -783,17 +784,23 @@ public class RobotClass2 {
      * @param level ground hub thing/(cone on) ground(slight adjustment), low, medium, or high junction
      * */
     public void moveSlides(int level, double power){
+        double circumference = 4.409;//circumference of pulley for hub
+//        double groundRN = ; // rotations needed to reach point from 0
+//        double smallRN =;
+        double medRN =26/circumference;
+        double highEP =37/circumference;// (inches from ground / circumference)* ticks
+
         //setup this with pid stuff
         int target;
         switch(level){
             default:
             case 0:
                 //ground, with slight adjustment, or pick up
-                target = 100;//arbitrary todo change!!!
+                target = 100;//2/circumference;//arbitrary todo change!!!
                 break;
             case 1:
                 //low
-                target = 200;
+                target = 200;//16/circumference;
                 break;
             case 2:
                 //medium
@@ -811,12 +818,10 @@ public class RobotClass2 {
     }
 
     public void openClaw(){
-        claw.setPosition(1);
+        claw.setPosition(0.5);
     }
 
-    public void closeClaw(){
-        claw.setPosition(0);
-    }
+    public void closeClaw(){ claw.setPosition(-1); }
 
     public void setLastError(double e){//?????????
         lastError= e;

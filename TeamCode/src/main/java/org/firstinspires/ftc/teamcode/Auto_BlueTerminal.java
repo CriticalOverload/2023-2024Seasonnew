@@ -76,13 +76,13 @@ public class Auto_BlueTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
+        robot.gyroStrafeEncoder(0.5,-90,2);
         robot.dropInTerminal(0.5, true);
         //3. turn and go to cone stack and align vertically
 //        robot.gyroTurn(90,0.5);
-        robot.gyroStrafeEncoder_noimu(0.5,180,48);
-        robot.gyroStrafeEncoder_noimu(0.5,90,6);
-//        robot.gyroTurn(-90,0.5);
-        // robot.moveSlides(2,0.5);
+        robot.gyroStrafeEncoder(0.5,-90,51);
+        robot.gyroTurn(90,0.5);
+        robot.gyroStrafeEncoder(0.5,90,1);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
@@ -91,45 +91,44 @@ public class Auto_BlueTerminal extends LinearOpMode {
         switch(signal){
             case 1:
                 //place in high close to audience
-                robot.goToAudHigh(0.5,true);
+                robot.goToHigh(0.5,true);
                 //go back to pick up cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
-                robot.gyroStrafeEncoder_noimu(90,0.5,36);
+                robot.gyroStrafeEncoder(90,0.5,36);
 
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //park
-                robot.gyroStrafeEncoder_noimu(0.5,180,12);
+                robot.gyroStrafeEncoder(0.5,180,12);
                 break;
             case 2:
             case 3:
             default:
                 //place in low close to stack
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
-                robot.gyroStrafeEncoder_noimu(0.5,90,18);
+                robot.gyroStrafeEncoder(0.5,90,18);
 
                 robot.pickUp(0.5);
                 //now place with respect to parking...
                 if(signal == 2){
                     //place in the high closest to audience
-                    robot.goToAudHigh(0.5,true);
-                    robot.gyroStrafeEncoder_noimu(0.5,0,12);
+                    robot.goToHigh(0.5,true);
+                    robot.gyroStrafeEncoder(0.5,0,10);
                 }
                 else{
                     // robot.moveSlides(2,0.5);
-
-                    robot.gyroStrafeEncoder_noimu(0.5,-90,48);
+                    robot.gyroStrafeEncoder(0.5,-90,48);
                     robot.gyroTurn(180,0.5);
                     //l shape... need to test reliability of diagonal strafing
-                    robot.gyroStrafeEncoder_noimu(0.5,180,12);
-                    robot.gyroStrafeEncoder_noimu(0.5,90,18);
+                    robot.gyroStrafeEncoder(0.5,180,12);
+                    robot.gyroStrafeEncoder(0.5,90,6);
                     robot.openClaw();
-                    robot.gyroStrafeEncoder_noimu(0.5, -90, 6);
+                    robot.gyroStrafeEncoder(0.5, -90, 3);
                 }
                 break;
         }
