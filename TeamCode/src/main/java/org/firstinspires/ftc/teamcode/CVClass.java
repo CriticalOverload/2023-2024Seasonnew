@@ -14,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CVClass extends OpenCvPipeline{
-    public static double pdiffs = 30;
+    private double pdiffs = 35, dists = 300;
+    private double boxDists;
     private double boxPDiffs = 0.0;
-    private List<MatOfPoint> blackContours;
+    private List<MatOfPoint> blackContours, greenContours;
     Mat output = new Mat();//output mat
 
     Rect blackbox, greenbox;//draws box
@@ -38,7 +39,7 @@ public class CVClass extends OpenCvPipeline{
         //https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
         //also test using RETR_TREE idk what the difference is. probably just method todo
         input.copyTo(output);
-        List<MatOfPoint> greenContours = getGreen(input);
+        greenContours = getGreen(input);
         blackContours = getBlack(input);//may make this black?
 
 
@@ -81,8 +82,12 @@ public class CVClass extends OpenCvPipeline{
         if(greenContours.size() > 0){//in other words, it found green
             if(blackContours.size() > 0){//found black... change height!!!
                 boxPDiffs = 200.0*Math.abs(blackbox.height-greenbox.height)/(double)(blackbox.height+ greenbox.height);//percent difference: |a-b|/((a+b)/2)*100=200*|a-b|/(a+b)//todo use area?
-                double boxDists = Math.sqrt(Math.pow(blackbox.x-greenbox.x,2)+Math.pow(blackbox.y-greenbox.y,2));
-                if (boxPDiffs < pdiffs && boxDists < 20){
+                double blackCx = blackbox.x + blackbox.width / 2;
+                double blackCy = blackbox.y - blackbox.height / 2;
+                double greenCx = greenbox.x + greenbox.width / 2;
+                double greenCy = greenbox.y - greenbox.width / 2;
+                boxDists = Math.sqrt(Math.pow(blackCx-greenCx,2)+Math.pow(blackCy-greenCy,2));
+                if (boxPDiffs < pdiffs || boxDists < dists){
                     //yellow and black
                     //around 123ish
                     signal = 2;
@@ -140,6 +145,11 @@ public class CVClass extends OpenCvPipeline{
         Scalar hiBound = new Scalar(hue/2+sensitivity,255,255);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
+        output.release();
+        hsv.release();
+        singleColor.release();
+        blur.release();
+        hierarchy.release();
         return contours;
     }
 
@@ -152,8 +162,6 @@ public class CVClass extends OpenCvPipeline{
 
         List<MatOfPoint> contours = new ArrayList<>();
 
-        double saturation, value;
-        double sensitivity;
 
         input.copyTo(output);//don't modify inputs
 
@@ -173,6 +181,11 @@ public class CVClass extends OpenCvPipeline{
         Scalar hiBound = new Scalar(179,sathi,valhi);//saturation + sensitivity,value);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
+        output.release();
+        hsv.release();
+        singleColor.release();
+        blur.release();
+        hierarchy.release();
         return contours;
     }
 
@@ -180,12 +193,18 @@ public class CVClass extends OpenCvPipeline{
         return signal;
     }
 
-    public int getHeight() {
+    public int getHeightBlack() {
         if (blackbox != null)
             return blackbox.height;
         return -1;
     }
-    public double getBoxPDiffs(){return boxPDiffs;}
 
+    public int getHeightGreen() {
+        if (greenbox != null)
+            return greenbox.height;
+        return -1;
+    }
+    public double getBoxPDiffs(){return boxPDiffs;}
+    public double getBoxDists(){return boxDists;}
     public int getContourSize(){return blackContours.size();}
 }

@@ -36,8 +36,9 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
+        imu = hardwareMap.get(BNO055IMU.class,"imu");
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
-        robot.setupRobot();
+        robot.setupRobot_base();
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
@@ -73,23 +74,41 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         // go forward a square
         //drop the cone
         robot.gyroTurn(180,0.5);
+        telemetry.addData("finished","180 turn");
+        telemetry.update();
+        Thread.sleep(500);
         //3. turn and go to cone stack and align vertically
         robot.gyroStrafeEncoder(0.5,90,12);
+        telemetry.addData("finished","strafe forward 12 in");
+        telemetry.update();
+        Thread.sleep(500);
         robot.gyroTurn(90,0.5);
+        telemetry.addData("finished","90 turn");
+        telemetry.update();
+        Thread.sleep(500);
         robot.gyroStrafeEncoder(0.5,90,0.5);
-        robot.moveSlides(1,0.5);
+        telemetry.addData("finished","0.5 forward");
+        telemetry.update();
+        Thread.sleep(500);
+        // robot.moveSlides(1,0.5);
         robot.openClaw();
+        telemetry.addData("finished","claw opened");
+        telemetry.update();
+        Thread.sleep(500);
         robot.gyroStrafeEncoder(0.5,-90,0.5);
+        telemetry.addData("finished","-90 strafe back");
+        telemetry.update();
+        Thread.sleep(500);
         robot.gyroTurn(-90,0.5);
         robot.gyroStrafeEncoder(0.5,90,18);
-        robot.moveSlides(2,0.5);
+        // robot.moveSlides(2,0.5);
         robot.gyroTurn(90,0.5);
         robot.gyroStrafeEncoder(0.5,90,18);
-        robot.pickUp();
+        robot.pickUp(0.5);
         robot.gyroStrafeEncoder(0.5,-90,18);
         robot.gyroTurn(90,0.5);
         robot.gyroStrafeEncoder(0.5,-90,0.5);
-        robot.moveSlides(2,0.5);
+        // robot.moveSlides(2,0.5);
         robot.openClaw();
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
@@ -98,4 +117,4 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         //5. place depending on signal
         }
     }
-}
+

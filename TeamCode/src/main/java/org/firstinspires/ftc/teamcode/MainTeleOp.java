@@ -25,7 +25,7 @@ public class MainTeleOp extends LinearOpMode {
 //todo add imu!!!!!!!!
         
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slide, claw, imu, this, false);
-        robot.setupRobot();
+        robot.setupRobot_base_slide_noimu();
 
         double powerMod = 1;
         telemetry.addData("setup?", true);
@@ -87,7 +87,7 @@ public class MainTeleOp extends LinearOpMode {
 //            motorFR.setPower((rightPower + (rotation))*powerMod);
 //            motorBL.setPower((rightPower - (rotation))*powerMod);
 //            motorBR.setPower((leftPower + (rotation))*powerMod);
-            slide.setPower(-gamepad2.right_stick_y * 0.5);
+            slide.setPower(-gamepad2.right_stick_y*2);
 
 
             //Claw
@@ -95,7 +95,7 @@ public class MainTeleOp extends LinearOpMode {
                 claw.setPosition(0.5);
             }
             else if (gamepad2.dpad_down) {
-                claw.setPosition(1.0);
+                claw.setPosition(-1.0);
             }
 
             //Linear Slide

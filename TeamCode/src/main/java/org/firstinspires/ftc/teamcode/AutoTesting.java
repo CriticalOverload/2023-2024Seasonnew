@@ -25,10 +25,17 @@ public class AutoTesting extends LinearOpMode {
         motorBR = hardwareMap.dcMotor.get("BR");
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
-        // imu = hardwareMap.get(BNO055IMU.class, "imu");
-        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, this, false);
-        robot.setupRobot_base_noimu();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, imu, this, false);
+        robot.setupRobot_base();
         waitForStart();
-        robot.gyroStrafeEncoder_noimu(0.5,0,24);
+        robot.gyroStrafeEncoder(0.5,0,24);
+        Thread.sleep(2000);
+        robot.gyroStrafeEncoder(0.5,90,24);
+        Thread.sleep(2000);
+        robot.gyroStrafeEncoder(0.5,180,24);
+        Thread.sleep(2000);
+        robot.gyroStrafeEncoder(0.5,-90,24);
+        Thread.sleep(2000);
     }
 }

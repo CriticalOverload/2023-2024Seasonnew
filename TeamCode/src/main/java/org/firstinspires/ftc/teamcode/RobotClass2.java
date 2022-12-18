@@ -122,6 +122,30 @@ public class RobotClass2 {
     }
 
     /**
+     * Full Constructor without encoders
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param viperslide slide motor
+     * @param claw claw servo
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL, DcMotor motorBR, DcMotor viperslide, Servo claw, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.viperslide = viperslide;
+        this.claw = claw;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash=yesDash;
+    }
+
+    /**
      * Base only Constructor
      * @param motorFL front left motor
      * @param motorFR front right motor
@@ -293,6 +317,26 @@ public class RobotClass2 {
         telemetry.update();
     }
 
+
+    /**
+     * Setup the robot and the telemetry for FTCDashboard
+     */
+    public void setupRobot_base_slide_noimu() throws InterruptedException{
+        reverseMotors();
+        for(DcMotor m : motors){
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        viperslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        resetEncoders();
+        resetSlides();
+
+        if(yesDash)
+            setupDashboard();
+
+        telemetry.addData("IMU", "ready");
+        telemetry.update();
+    }
+
     public void reverseMotors() throws InterruptedException{
         //reverse needed motors here!!
         motorBL.setDirection(DcMotor.Direction.REVERSE);
@@ -435,10 +479,10 @@ public class RobotClass2 {
      * @param correction
      * */
     public void correctedTankStrafe(double leftPower, double rightPower, double correction){
-        motorFL.setPower(leftPower + correction);
-        motorFR.setPower(rightPower - correction);
-        motorBL.setPower(rightPower + correction);
-        motorBR.setPower(leftPower - correction);
+        motorFL.setPower(leftPower - correction);
+        motorFR.setPower(rightPower + correction);
+        motorBL.setPower(rightPower - correction);
+        motorBR.setPower(leftPower + correction);
     }
 
     /**
@@ -465,7 +509,7 @@ public class RobotClass2 {
         if(degrees == 0)
             return;
         if(degrees < 0){
-            turn(power* -1);
+            turn(power*-1);
         }
         else{
             turn(power);
@@ -568,7 +612,7 @@ public class RobotClass2 {
             //multiplied by gain; the gain is the sensitivity to angle
             //We have determined that .1 is a good gain; higher gains result in overcorrection
             //Lower gains are ineffective
-            return -angle*002;//gain;<<<< make var?? todo do we even need gain?
+            return -angle*0.02;//gain;<<<< make var?? todo do we even need gain?
         }
     }
 
@@ -589,13 +633,18 @@ public class RobotClass2 {
         //calculate powers needed using direction
         double leftPower = Math.cos(newDirection) * power;
         double rightPower = Math.sin(newDirection) * power;
-
+        telemetry.addData("left",leftPower);
+        telemetry.addData("right",rightPower);
+        telemetry.update();
         resetEncoders();
         resetAngle();
         //setNewGain(0.02);
 
         while(Math.abs(motorFL.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
             double correction = getCorrection();
+            composeAngleTelemetry();
+            telemetry.addData("correction",correction);
+            telemetry.update();
             correctedTankStrafe(leftPower, rightPower, correction);
         }
         completeStop();
@@ -686,7 +735,7 @@ public class RobotClass2 {
     }
     //auto movements and actions
     public void goToAudHigh(double power, boolean blue) throws InterruptedException{
-        moveSlides(3,power);
+        // moveSlides(3,power);
         gyroStrafeEncoder_noimu(power,-90,36);
         if(blue){
             gyroTurn(90,power);
@@ -699,12 +748,12 @@ public class RobotClass2 {
     }
 
     public void pickUp(double power){
-        moveSlides(0,power);
+        // moveSlides(0,power);
         closeClaw();
     }
 
     public void goToStackLow(double power, boolean blue) throws InterruptedException{
-        moveSlides(1,power);
+        // moveSlides(1,power);
         gyroStrafeEncoder_noimu(power,-90,18);
         if(blue){
             gyroTurn(-90,power);

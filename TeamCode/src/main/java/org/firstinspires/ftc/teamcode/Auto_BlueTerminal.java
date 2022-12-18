@@ -43,47 +43,46 @@ public class Auto_BlueTerminal extends LinearOpMode {
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
         robot.setupRobot();
 
-//        int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-////        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-//        mainPipeline = new CVClass();//create new pipeline
-//
-//        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
-//            @Override
-//            public void onOpened() {
-//                cam.setPipeline(mainPipeline);//set webcam pipeline
-//                cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
-//            }
-//
-//            @Override
-//            public void onError(int errorCode) {
-//                telemetry.addData("Camera Error...", ":(");
-//                telemetry.update();
-//                System.exit(0);
-//            }
-//        });
+        int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
+        mainPipeline = new CVClass();//create new pipeline
+
+        cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
+            @Override
+            public void onOpened() {
+                cam.setPipeline(mainPipeline);//set webcam pipeline
+                cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
+            }
+
+            @Override
+            public void onError(int errorCode) {
+                telemetry.addData("Camera Error...", ":(");
+                telemetry.update();
+                System.exit(0);
+            }
+        });
 
         waitForStart();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
-//        signal = mainPipeline.getSignal();
-//        telemetry.addData("signal",signal);
-//        if(signal==0)
-//            telemetry.addData("assuming",3);
-//        telemetry.update();
+        signal = mainPipeline.getSignal();
+        telemetry.addData("signal",signal);
+        if(signal==0)
+            telemetry.addData("assuming",3);
+        telemetry.update();
         //todo: test and update
         //also roadrunner...
         //2. drop in terminal
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.moveSlides(3,0.5);
         robot.dropInTerminal(0.5, true);
         //3. turn and go to cone stack and align vertically
 //        robot.gyroTurn(90,0.5);
         robot.gyroStrafeEncoder_noimu(0.5,180,48);
-        robot.moveSlides(2,0.5);
-        robot.gyroStrafeEncoder_noimu(0.5,90,3);
+        robot.gyroStrafeEncoder_noimu(0.5,90,6);
 //        robot.gyroTurn(-90,0.5);
+        // robot.moveSlides(2,0.5);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
@@ -122,7 +121,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
                     robot.gyroStrafeEncoder_noimu(0.5,0,12);
                 }
                 else{
-                    robot.moveSlides(2,0.5);
+                    // robot.moveSlides(2,0.5);
 
                     robot.gyroStrafeEncoder_noimu(0.5,-90,48);
                     robot.gyroTurn(180,0.5);

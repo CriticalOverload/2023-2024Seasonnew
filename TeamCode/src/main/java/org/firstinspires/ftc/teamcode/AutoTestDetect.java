@@ -30,8 +30,8 @@ public class AutoTestDetect extends LinearOpMode {
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
         mainPipeline = new CVClass();//create new pipeline
 
-        RobotClass2 dashboarder = new RobotClass2(this);
-        dashboarder.setupDashboard();
+//        RobotClass2 dashboarder = new RobotClass2(this);
+//        dashboarder.setupDashboard();
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
@@ -42,31 +42,32 @@ public class AutoTestDetect extends LinearOpMode {
 
             @Override
             public void onError(int errorCode) {
-                dashboarder.addData("Camera Error...", ":(");
-                dashboarder.update();
+                telemetry.addData("Camera Error...", ":(");
+                telemetry.update();
                 System.exit(0);
             }
         });
 
-        dashboarder.addData("please work","this time");
-        dashboarder.update();
+        telemetry.addData("please work","this time");
+        telemetry.update();
         waitForStart();//if there is a camera error... and it crashes the program... then we need to find a way to "pause stream"
     	int signal=0;
         while(opModeIsActive()){
-            dashboarder.addData("yay!","first!");
+            telemetry.addData("yay!","first!");
             // telemetry.addData("Got to this point","yay");
             // telemetry.update();
             signal = mainPipeline.getSignal();
-            dashboarder.addData("black box height", mainPipeline.getHeight());
-
-            dashboarder.addData("signal value", signal);
+            telemetry.addData("black box height", mainPipeline.getHeightBlack());
+            telemetry.addData("green box height", mainPipeline.getHeightGreen());
+            telemetry.addData("boxDists",mainPipeline.getBoxDists());
+            telemetry.addData("signal value", signal);
         
             if (signal == 0) {
-                dashboarder.addData("assuming", "1");
+                telemetry.addData("assuming", "1");
             }
-            dashboarder.addData("boxPDiffs", mainPipeline.getBoxPDiffs());
-            dashboarder.addData("blackContourSize", mainPipeline.getContourSize());
-            dashboarder.update();
+            telemetry.addData("boxPDiffs", mainPipeline.getBoxPDiffs());
+//            telemetry.addData("blackContourSize", mainPipeline.getContourSize());
+            telemetry.update();
             Thread.sleep(1000);
         }
     }

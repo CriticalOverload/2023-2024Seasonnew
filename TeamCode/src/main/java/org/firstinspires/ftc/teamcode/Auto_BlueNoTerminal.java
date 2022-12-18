@@ -76,12 +76,12 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.moveSlides(3,0.5);
+        // robot.moveSlides(3,0.5);
         robot.dropInTerminal(0.5, true);
         //3. turn and go to cone stack and align vertically
 //        robot.gyroTurn(90,0.5);
         robot.gyroStrafeEncoder_noimu(0.5,180,48);
-        robot.moveSlides(2,0.5);
+        // robot.moveSlides(2,0.5);
         robot.gyroStrafeEncoder_noimu(0.5,90,3);
 //        robot.gyroTurn(-90,0.5);
         //use distance sensor to get to wall...
@@ -122,7 +122,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
                     robot.gyroStrafeEncoder_noimu(0.5,0,12);
                 }
                 else{
-                    robot.moveSlides(2,0.5);
+                    // robot.moveSlides(2,0.5);
 
                     robot.gyroStrafeEncoder_noimu(0.5,-90,48);
                     robot.gyroTurn(180,0.5);
