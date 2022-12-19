@@ -87,14 +87,14 @@ public class Auto_BlueTerminal extends LinearOpMode {
         switch(signal){
             case 1:
                 //place in high close to audience
-                robot.goToAudHigh(0.5,true);
+                robot.goToHigh(0.5,true);
                 //go back to pick up cone
                 robot.gyroTurn(-90,0.5);
                 //drive to wall...
                 robot.gyroStrafeEncoder(90,0.5,36);
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //park
                 robot.gyroStrafeEncoder(0.5,180,12);
                 break;
@@ -102,7 +102,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
             case 3:
             default:
                 //place in low close to stack
-                robot.goToStackLow(0.5,true);
+                robot.goToLow(0.5,true);
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...
@@ -111,7 +111,7 @@ public class Auto_BlueTerminal extends LinearOpMode {
                 //now place with respect to parking...
                 if(signal == 2){
                     //place in the high closest to audience
-                    robot.goToAudHigh(0.5,true);
+                    robot.goToHigh(0.5,true);
                     robot.gyroStrafeEncoder(0.5,0,12);
                 }
                 else{
