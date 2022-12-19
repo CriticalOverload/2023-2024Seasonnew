@@ -83,7 +83,7 @@ public class RobotClass2 {
         this.leftEncoder = leftEncoder;
         this.rightEncoder = rightEncoder;
         this.backEncoder = backEncoder;
-        
+
         this.viperslide = viperslide;
         this.claw = claw;
         this.imu = imu;
@@ -167,7 +167,7 @@ public class RobotClass2 {
     }
 
     /**
-     * Base only + encoders Constructor 
+     * Base only + encoders Constructor
      * @param motorFL front left motor
      * @param motorFR front right motor
      * @param motorBL back left motor
@@ -214,7 +214,7 @@ public class RobotClass2 {
         motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
         this.yesDash = yesDash;
     }
-    
+
     /**
      * Empty. CV testing or just for dashboard capabilities
      * */
@@ -243,7 +243,6 @@ public class RobotClass2 {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         viperslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         setIMUParameters();
         resetEncoders();
         resetSlides();
@@ -299,7 +298,7 @@ public class RobotClass2 {
         telemetry.addData("IMU", "ready");
         telemetry.update();
     }
-    
+
     /**
      * Setup the robot and the telemetry for FTCDashboard
      */
@@ -544,7 +543,7 @@ public class RobotClass2 {
         resetAngle();
     }
 
-    
+
     /**
      * Make precise turn using gyro
      * no PID
@@ -592,6 +591,7 @@ public class RobotClass2 {
         Thread.sleep(250);
         resetAngle();
     }
+
     //add pid gyro turn?????....
 
     /**
@@ -638,7 +638,7 @@ public class RobotClass2 {
         telemetry.update();
         resetEncoders();
         resetAngle();
-        //setNewGain(0.02);
+//        setNewGain(0.02);
 
         while(Math.abs(motorFL.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
             double correction = getCorrection();
@@ -680,14 +680,14 @@ public class RobotClass2 {
         //gyroStrafeEncoder_deadWheels(1, 90, 3); newDirection = p/4
         //gyroStrafeEncoder_deadWheels(1, 0, 3); newDirection = -p/4
         //gyroStrafeEncoder_deadWheels(1, 180, 3); newDirection = 3p/4
-        
+
         if (newDirection == Math.PI/4 || newDirection == -3*Math.PI/4) {
             encoder = leftEncoder;
         }
         else{
             encoder = backEncoder;
         }
-        
+
 
         while(Math.abs(encoder.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
             double correction = getCorrection();
@@ -821,7 +821,9 @@ public class RobotClass2 {
         claw.setPosition(0.5);
     }
 
-    public void closeClaw(){ claw.setPosition(-1); }
+    public void closeClaw(){
+        claw.setPosition(-1);
+    }
 
     public void setLastError(double e){//?????????
         lastError= e;
@@ -835,6 +837,75 @@ public class RobotClass2 {
 
     public void update(){
         dash.sendTelemetryPacket(packet);
+    }
+
+    //pid section
+    /**
+     * Reset slides PID. MUST DO BEFORE EACH CALL!!!!!
+     * */
+    public void resetPID(){
+        integral = 0;
+        lastError = 0;
+    }
+    /**
+     * Tuning PID for the slides
+     * */
+    public double pidTuner_noLoop(int dist, double kp, double kd, double ki, ElapsedTime timer) {
+        //go distance, calculating power based on distance
+        double power, error, derivative;
+
+        error = dist - viperslide.getCurrentPosition();
+
+        derivative = (error-lastError)/timer.seconds();
+        lastError = error;
+
+        integral += error*timer.seconds();
+
+        power = error*kp + derivative*kd + integral*ki;
+
+
+//        addData("dist",dist);
+//        addData("motorPos",viperslide.getCurrentPosition());
+//        addData("error", error);
+//        addData("derivative", derivative);
+//        addData("integral", integral);
+//        addData("power", power);
+//        update();
+        return power;
+    }
+
+    /**
+     * Reset slides PID. MUST DO BEFORE EACH CALL!!!!!
+     * */
+    public void resetRobotPID(){
+        robotIntegral = 0;
+        robotLastError = 0;
+    }
+    /**
+     * Tuning PID for the robot
+     *
+     * */
+    public double robotPidTuner_noLoop(int dist, double kp, double kd, double ki, DcMotor encoder, ElapsedTime timer) {
+        //go distance, calculating power based on distance
+        double power, error, derivative;
+
+        error = dist - encoder.getCurrentPosition();//??
+
+        derivative = (error-robotLastError)/timer.seconds();
+        robotLastError = error;
+
+        robotIntegral += error*timer.seconds();
+
+        power = error*kp + derivative*kd + robotIntegral*ki;
+
+//        addData("dist",dist);
+//        addData("motorPos",viperslide.getCurrentPosition());
+//        addData("error", error);
+//        addData("derivative", derivative);
+//        addData("integral", integral);
+//        addData("power", power);
+//        update();
+        return power;
     }
 
     //pid section
