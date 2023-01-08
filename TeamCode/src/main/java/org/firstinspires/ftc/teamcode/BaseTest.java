@@ -68,6 +68,8 @@ public class BaseTest extends LinearOpMode {
             else if (gamepad2.dpad_down) {
                 servo.setPosition(1.0);
             }
+            telemetry.addData("Slide position",motorLS.getCurrentPosition());
+            telemetry.update();
 
         }
 

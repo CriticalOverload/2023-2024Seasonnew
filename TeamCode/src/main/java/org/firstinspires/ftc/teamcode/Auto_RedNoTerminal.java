@@ -30,6 +30,8 @@ public class Auto_RedNoTerminal extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException{
+        //red no terminal and blue terminal are same thing
+        //blue no terminal and red terminal are same thing
         motorFR = hardwareMap.dcMotor.get("FR");
         motorBR = hardwareMap.dcMotor.get("BR");
         motorFL = hardwareMap.dcMotor.get("FL");
@@ -38,7 +40,7 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         claw = hardwareMap.servo.get("claw");
         imu = hardwareMap.get(BNO055IMU.class,"imu");
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
-        robot.setupRobot_base();
+        robot.setupRobot();
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
@@ -75,37 +77,22 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         //drop the cone
         robot.gyroStrafeEncoder(0.5,-90,4);
         robot.gyroTurn(180,0.5);
-        telemetry.addData("finished","180 turn");
-        telemetry.update();
-        Thread.sleep(500);
         //3. turn and go to cone stack and align vertically
         robot.gyroStrafeEncoder(0.5,90,34);
-        telemetry.addData("finished","strafe forward 36 in"); //goes toward low cone
-        telemetry.update();
-        Thread.sleep(500);
         robot.gyroTurn(-90,0.5);
-        telemetry.addData("finished","-90 turn");
-        telemetry.update();
-        Thread.sleep(500);
         robot.gyroStrafeEncoder(0.5,90,1.5);
-        telemetry.addData("finished","0.5 forward");
-        telemetry.update();
-        Thread.sleep(500);
-        // robot.moveSlides(1,0.5);
+
+        robot.moveSlides(1,0.5);
         robot.openClaw();
-        telemetry.addData("finished","claw opened"); //Dropped cone into low stick
-        telemetry.update();
-        Thread.sleep(500);
         robot.gyroStrafeEncoder(0.5,-90,1.5);
         robot.closeClaw();
-        telemetry.addData("finished","-90 strafe back");
-        telemetry.update();
-        Thread.sleep(500);
         robot.gyroStrafeEncoder(0.5,185,12);//strafes left toward stack line
         robot.gyroStrafeEncoder(0.5,90,19); //strafes forward to the stack
-        // robot.moveSlides(2,0.5);
-        robot.pickUp(0.5);
-        robot.goToLow(0.5,true);
+        robot.openClaw();
+        robot.moveSlides(0,0.5);
+        robot.closeClaw();
+
+        robot.goToMid(0.5,true);//edit blue?
         }
     }
 

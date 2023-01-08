@@ -49,7 +49,7 @@ public class MainTeleOp extends LinearOpMode {
                 robot.moveSlides(3,0.5);
             }
 
-            slide.setPower(gamepad2.right_stick_y*2);
+            slide.setPower(-gamepad2.right_stick_y*0.5);
 
             //claw
             if(gamepad2.left_bumper){

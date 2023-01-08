@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.openftc.easyopencv.OpenCvCamera;
 
-@Autonomous(name="Auto Blue No Terminal")
-public class Auto_BlueNoTerminal extends LinearOpMode {
+public class OLDAuto_BlueNoTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -97,7 +95,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
 
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
-                robot.goToLow(0.5,true);
+                robot.goToMid(0.5,true);
                 //park
                 robot.gyroStrafeEncoder_noimu(0.5,180,12);
                 break;
@@ -105,7 +103,7 @@ public class Auto_BlueNoTerminal extends LinearOpMode {
             case 3:
             default:
                 //place in low close to stack
-                robot.goToLow(0.5,true);
+                robot.goToMid(0.5,true);
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...

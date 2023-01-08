@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -11,8 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA New Auto Red Terminal")
-public class Auto_NewRedTerminal extends LinearOpMode {
+public class OLDAuto_NewBlueTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -72,42 +70,44 @@ public class Auto_NewRedTerminal extends LinearOpMode {
         telemetry.update();
         //todo: test and update
         //also roadrunner...
+
         //2. drop in terminal
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.gyroStrafeEncoder(0.5,-90,2);
-        robot.dropInTerminal(0.5, false);
+        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
+        robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
         //3. turn and go to cone stack and align vertically
-//        robot.gyroTurn(90,0.5);
-        robot.gyroStrafeEncoder(0.5,-90,51);
+        robot.closeClaw();
+        robot.gyroStrafeEncoder(0.5,-65,46);//backwards... may make it a slight to the rightish to avoid knocking into stack or another robot
         robot.gyroTurn(90,0.5);
-        robot.gyroStrafeEncoder(0.5,90,1);
+        robot.gyroStrafeEncoder(0.5,90,2);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
         robot.pickUp(0.5);
         //5. place depending on signal
         //place in low close to stack
-        robot.goToLow(0.5,false);
+        robot.goToMid(0.5,true);
         //go back to pickup a cone
-        robot.gyroTurn(90,0.5);
         //drive to wall...
-        robot.gyroStrafeEncoder(0.5,90,18);
+        robot.gyroStrafeEncoder(0.5,90,16);
 
         robot.pickUp(0.5);
-        robot.goToHigh(0.5,false);
+        robot.goToHigh(0.5,true);
 
         switch(signal){
             case 1:
-                robot.gyroStrafeEncoder(0.5,0,10);
+                robot.gyroStrafeEncoder(0.5,180,6);
                 break;
             case 2:
-                robot.gyroStrafeEncoder(0.5,0,15);
+                robot.gyroStrafeEncoder(0.5,0,6);
+                //move somehow
                 break;
             default:
             case 3:
-                robot.gyroStrafeEncoder(0.5,0,20);
+                robot.gyroStrafeEncoder(0.5,0,28);
+                //move
                 break;
         }
         

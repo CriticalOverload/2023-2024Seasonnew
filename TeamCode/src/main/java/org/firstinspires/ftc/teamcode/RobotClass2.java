@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class RobotClass2 {
-    private DcMotor motorFL, motorBR, motorBL, motorFR, motorLS;//our motor
+    private DcMotor motorFL, motorBR, motorBL, motorFR;//our motor
     private DcMotor[] motors;//beware.... uhh
     private DcMotor viperslide;
     private Servo claw;
@@ -521,6 +521,7 @@ public class RobotClass2 {
             telemetry.addData("Target angle", degrees);
             telemetry.update();
         }*///doesn't work the way we want it to... may edit later but not urgent todo
+        
         if (degrees < 0){
             while (opMode.opModeIsActive() && getAngle() > degrees+10){
                 composeAngleTelemetry();
@@ -534,6 +535,76 @@ public class RobotClass2 {
                 //display the target angle
                 telemetry.addData("Target angle", degrees);
                 telemetry.update();
+            }
+        }
+
+        completeStop();
+        //Wait .5 seconds to ensure robot is stopped before continuing
+        Thread.sleep(250);
+        resetAngle();
+    }
+
+    /**
+     * Make precise turn using gyro
+     * pseudo pid
+     * + is ccw, - is cw
+     * @param degrees
+     * @param power
+     * */
+    public void gyroTurn_PID(int degrees, double power) throws InterruptedException{
+        //restart angle tracking
+        resetAngle();
+        if(degrees == 0)
+            return;
+
+        //Rotate until current angle is equal to the target angle
+        //getAngle()-degrees
+        /*while(opMode.opModeIsActive() && Math.abs(getAngle()-degrees) > 10){
+            composeAngleTelemetry();
+            telemetry.addData("Target angle", degrees);
+            telemetry.update();
+        }*///doesn't work the way we want it to... may edit later but not urgent todo
+        
+        //50%> full speed
+        //25%> 1/2 speed
+        //else 1/4 speed
+        if (degrees < 0){
+            while (opMode.opModeIsActive() && getAngle() > degrees+3){
+                double error = Math.abs(getAngle()-degrees);
+                composeAngleTelemetry();
+                //display the target angle
+                telemetry.addData("Target angle", degrees);
+                telemetry.update();
+                double mod;
+                if(error/degrees > 0.50){
+                    mod = 1;
+                }
+                else if (error/degrees > 0.25){
+                    mod = 0.5;
+                }
+                else{
+                    mod = 0.25;
+                }
+                turn(power*-1*mod);
+            }
+        }else{
+            while (opMode.opModeIsActive() && getAngle() < degrees-3) {
+                double error = Math.abs(getAngle()-degrees);
+                composeAngleTelemetry();
+                //display the target angle
+                telemetry.addData("Target angle", degrees);
+                telemetry.update();
+                double mod;
+                if(error/degrees > 0.50){
+                    mod = 1;
+                }
+                else if (error/degrees > 0.25){
+                    mod = 0.5;
+                }
+                else{
+                    mod = 0.25;
+                }
+                turn(power*mod);
             }
         }
 
@@ -655,6 +726,57 @@ public class RobotClass2 {
 
     /**
      * Strafe in any direction using encoders.
+     * slows down before target
+     * @param power
+     * @param angle Direction to strafe (90 = forward, 0 = right, -90 = backwards, 180 = left)
+     * @param in inches
+     * @throws InterruptedException if robot is stopped
+     */
+    public void gyroStrafeEncoder_PID(double power, double angle, double in) throws InterruptedException{
+        double ticks = in * TICKS_PER_IN;
+
+        //convert direction (degrees) into radians
+        double newDirection = angle * Math.PI/180 - Math.PI/4;
+
+        //calculate powers needed using direction
+        double leftPower = Math.cos(newDirection) * power;
+        double rightPower = Math.sin(newDirection) * power;
+        telemetry.addData("left",leftPower);
+        telemetry.addData("right",rightPower);
+        telemetry.update();
+        resetEncoders();
+        resetAngle();
+//        setNewGain(0.02);
+        //ticks
+        //50%> full speed
+        //25%> 1/2 speed
+        //else 1/4 speed
+        while(Math.abs(motorFL.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
+            double error = Math.abs(motorFL.getCurrentPosition()-ticks);
+            double correction = getCorrection();
+            composeAngleTelemetry();
+            telemetry.addData("correction",correction);
+            telemetry.update();
+            double mod;
+            if(error/ticks > 0.50){
+                mod = 1;
+            }
+            else if (error/ticks > 0.25){
+                mod = 0.5;
+            }
+            else{
+                mod = 0.25;
+            }
+            correctedTankStrafe(mod*leftPower, mod*rightPower, correction);
+        }
+        completeStop();
+        Thread.sleep(250);
+        resetAngle();
+        resetEncoders();
+    }
+
+    /**
+     * Strafe in any direction using encoders.
      * use this
      * @param power
      * @param angle Direction to strafe (90 = forward, 0 = right, -90 = backwards, 180 = left)
@@ -690,10 +812,11 @@ public class RobotClass2 {
 
 
         while(Math.abs(encoder.getCurrentPosition()) < ticks && opMode.opModeIsActive()){
-            double correction = getCorrection();
+            double correction = getCorrection_deadwheels();
             correctedTankStrafe(leftPower, rightPower, correction);
             //todo adjust to have PID tuning stuff
         }
+        
         completeStop();
         Thread.sleep(250);
         resetAngle();
@@ -701,6 +824,13 @@ public class RobotClass2 {
     }
 
 
+    /**
+    for strafing only!!
+     */
+    public double getCorrection_deadwheels(){
+        //Get the current angle of the robot
+        return (leftEncoder.getCurrentPosition() - rightEncoder.getCurrentPosition())*0.02;//gain, may need to make this negative
+    }
 
     /**
      * Strafe in any direction using encoders.
@@ -733,6 +863,8 @@ public class RobotClass2 {
         // resetAngle();
         resetEncoders();
     }
+
+
     //auto movements and actions
     public void goToHigh(double power, boolean blue) throws InterruptedException{
         // moveSlides(3,power);
@@ -747,12 +879,8 @@ public class RobotClass2 {
         openClaw();
     }
 
-    public void pickUp(double power){
-        // moveSlides(0,power);
-        closeClaw();
-    }
 
-    public void goToLow(double power, boolean blue) throws InterruptedException{
+    public void goToMid(double power, boolean blue) throws InterruptedException{
         // moveSlides(1,power);
         gyroStrafeEncoder(power,-90,22);
         if(blue){
@@ -806,19 +934,19 @@ public class RobotClass2 {
             default:
             case 0:
                 //ground, with slight adjustment, or pick up
-                target = 100;//2/circumference;//arbitrary todo change!!!
+                target = 0;//2/circumference;//arbitrary todo change!!!
                 break;
             case 1:
                 //low
-                target = 200;//16/circumference;
+                target = -1752;//16/circumference;
                 break;
             case 2:
                 //medium
-                target = 300;
+                target = -2939;
                 break;
             case 3:
                 //high
-                target = 400;
+                target = -4019;
                 break;
         }
         viperslide.setPower(power);
