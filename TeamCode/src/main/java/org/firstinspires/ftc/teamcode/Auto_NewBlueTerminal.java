@@ -11,8 +11,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Auto Red No Terminal")
-public class Auto_RedNoTerminal extends LinearOpMode {
+@Autonomous(name="AA New Auto Blue Terminal")
+public class Auto_NewBlueTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -35,10 +35,13 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
+        signal = 1;
         claw = hardwareMap.servo.get("claw");
-        imu = hardwareMap.get(BNO055IMU.class,"imu");
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
-        robot.setupRobot_base();
+        robot.setupRobot();
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
@@ -69,43 +72,47 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         telemetry.update();
         //todo: test and update
         //also roadrunner...
+
         //2. drop in terminal
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.gyroStrafeEncoder(0.5,-90,4);
-        robot.gyroTurn(180,0.5);
-        telemetry.addData("finished","180 turn");
-        telemetry.update();
-        Thread.sleep(500);
+        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
+        robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
         //3. turn and go to cone stack and align vertically
-        robot.gyroStrafeEncoder(0.5,90,34);
-        telemetry.addData("finished","strafe forward 36 in"); //goes toward low cone
-        telemetry.update();
-        Thread.sleep(500);
-        robot.gyroTurn(-90,0.5);
-        telemetry.addData("finished","-90 turn");
-        telemetry.update();
-        Thread.sleep(500);
-        robot.gyroStrafeEncoder(0.5,90,1.5);
-        telemetry.addData("finished","0.5 forward");
-        telemetry.update();
-        Thread.sleep(500);
-        // robot.moveSlides(1,0.5);
-        robot.openClaw();
-        telemetry.addData("finished","claw opened"); //Dropped cone into low stick
-        telemetry.update();
-        Thread.sleep(500);
-        robot.gyroStrafeEncoder(0.5,-90,1.5);
         robot.closeClaw();
-        telemetry.addData("finished","-90 strafe back");
-        telemetry.update();
-        Thread.sleep(500);
-        robot.gyroStrafeEncoder(0.5,185,12);//strafes left toward stack line
-        robot.gyroStrafeEncoder(0.5,90,19); //strafes forward to the stack
-        // robot.moveSlides(2,0.5);
+        robot.gyroStrafeEncoder(0.5,-65,46);//backwards... may make it a slight to the rightish to avoid knocking into stack or another robot
+        robot.gyroTurn(90,0.5);
+        robot.gyroStrafeEncoder(0.5,90,2);
+        //use distance sensor to get to wall...
+        //robot.driveToWall... copy from archaic then edit
+        //4. pick up cone
         robot.pickUp(0.5);
+        //5. place depending on signal
+        //place in low close to stack
         robot.goToLow(0.5,true);
-        }
-    }
+        //go back to pickup a cone
+        //drive to wall...
+        robot.gyroStrafeEncoder(0.5,90,16);
 
+        robot.pickUp(0.5);
+        robot.goToHigh(0.5,true);
+
+        switch(signal){
+            case 1:
+                robot.gyroStrafeEncoder(0.5,180,6);
+                break;
+            case 2:
+                robot.gyroStrafeEncoder(0.5,0,6);
+                //move somehow
+                break;
+            default:
+            case 3:
+                robot.gyroStrafeEncoder(0.5,0,28);
+                //move
+                break;
+        }
+        
+        
+    }
+}

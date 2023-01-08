@@ -11,8 +11,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Auto Red Terminal")
-public class Auto_RedTerminal extends LinearOpMode {
+@Autonomous(name="AA New Auto Red Terminal")
+public class Auto_NewRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -35,8 +35,11 @@ public class Auto_RedTerminal extends LinearOpMode {
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
+        signal = 1;
         claw = hardwareMap.servo.get("claw");
-        imu = hardwareMap.get(BNO055IMU.class,"imu");
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+
         robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
         robot.setupRobot();
 
@@ -73,55 +76,41 @@ public class Auto_RedTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
-//        robot.dropInTerminal(0.5, blue);
+        robot.gyroStrafeEncoder(0.5,-90,2);
+        robot.dropInTerminal(0.5, false);
         //3. turn and go to cone stack and align vertically
-        robot.gyroStrafeEncoder(0.5,90,48);
-        robot.gyroStrafeEncoder(0.5,180,6);
-        robot.gyroTurn(-90,0.5);//change!!!
-        // robot.moveSlides(1,0.5);
+//        robot.gyroTurn(90,0.5);
+        robot.gyroStrafeEncoder(0.5,-90,51);
+        robot.gyroTurn(90,0.5);
+        robot.gyroStrafeEncoder(0.5,90,1);
         //use distance sensor to get to wall...
         //robot.driveToWall... copy from archaic then edit
         //4. pick up cone
         robot.pickUp(0.5);
         //5. place depending on signal
+        //place in low close to stack
+        robot.goToLow(0.5,false);
+        //go back to pickup a cone
+        robot.gyroTurn(90,0.5);
+        //drive to wall...
+        robot.gyroStrafeEncoder(0.5,90,18);
+
+        robot.pickUp(0.5);
+        robot.goToHigh(0.5,false);
+
         switch(signal){
             case 1:
-                //place in high close to audience
-                robot.goToHigh(0.5,false);
-                //go back to pick up cone
-                robot.gyroTurn(90,0.5);//edit!!!
-                //drive to wall...
-                robot.pickUp(0.5);
-                //go to low close to stack and audience then park
-                robot.goToLow(0.5,true);
-                //park
-                robot.gyroStrafeEncoder(0.5,180,12);
+                robot.gyroStrafeEncoder(0.5,0,10);
                 break;
             case 2:
-            case 3:
+                robot.gyroStrafeEncoder(0.5,0,15);
+                break;
             default:
-                //place in low close to stack
-                robot.goToLow(0.5,true);
-                //go back to pickup a cone
-                robot.gyroTurn(90,0.5);
-                //drive to wall...
-                robot.pickUp(0.5);
-                //now place with respect to parking...
-                if(signal == 2){
-                    //place in the high closest to audience
-                    robot.goToHigh(0.5,true);
-                    robot.gyroStrafeEncoder(0.5,0,12);
-                }
-                else{
-                    robot.gyroStrafeEncoder(0.5,-90,48);
-                    robot.gyroTurn(180,0.5);
-                    //l shape... need to test reliability of diagonal strafing
-                    robot.gyroStrafeEncoder(0.5,180,12);
-                    robot.gyroStrafeEncoder(0.5,90,18);
-                    robot.openClaw();
-                    robot.gyroStrafeEncoder(0.5, -90, 6);
-                }
+            case 3:
+                robot.gyroStrafeEncoder(0.5,0,20);
                 break;
         }
+        
+        
     }
 }

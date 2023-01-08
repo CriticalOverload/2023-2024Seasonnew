@@ -736,7 +736,7 @@ public class RobotClass2 {
     //auto movements and actions
     public void goToHigh(double power, boolean blue) throws InterruptedException{
         // moveSlides(3,power);
-        gyroStrafeEncoder(power,-90,36);
+        gyroStrafeEncoder(power,-90,34);
         if(blue){
             gyroTurn(90,power);
         }
@@ -754,16 +754,25 @@ public class RobotClass2 {
 
     public void goToLow(double power, boolean blue) throws InterruptedException{
         // moveSlides(1,power);
-        gyroStrafeEncoder(power,-90,18);
+        gyroStrafeEncoder(power,-90,22);
         if(blue){
             gyroTurn(-90,power);
         }
         else{
             gyroTurn(90,power);
         }
+        gyroStrafeEncoder(power,0,6);
         gyroStrafeEncoder(power,90,2);
         openClaw();
         gyroStrafeEncoder(power,-90,2);
+        closeClaw();
+        gyroStrafeEncoder(power,180,6);
+        if(blue){
+            gyroTurn(90,power);
+        }
+        else {
+            gyroTurn(-90, power);
+        }
     }
 
     /**
@@ -773,8 +782,9 @@ public class RobotClass2 {
         int mod = 1;
         if(blue)
             mod=-1;
-        gyroStrafeEncoder(power*mod,0,20);
+        gyroStrafeEncoder(power*mod,0,28);//may need more, basically go to the wall
         openClaw();
+        //lift up slide TODO
     }
 
     //attachments

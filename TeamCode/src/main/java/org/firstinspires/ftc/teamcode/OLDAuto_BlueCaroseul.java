@@ -13,8 +13,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Blue Caroseul")
-public class Auto_BlueCaroseul extends LinearOpMode {
+public class OLDAuto_BlueCaroseul extends LinearOpMode {
     //robot parts
     private DcMotor motorFrontRight, motorFrontLeft, motorBackRight, motorBackLeft, motorOuttake, motorIntake;
     private CRServo duck;

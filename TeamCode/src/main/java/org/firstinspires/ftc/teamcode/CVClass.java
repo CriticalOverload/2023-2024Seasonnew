@@ -137,11 +137,11 @@ public class CVClass extends OpenCvPipeline{
 
         //find contours:
         //using HSV
-        double hue = 120;
+        double hue = 131;
         double sensitivity = 15;//to adjust for slight variations. Ewww that's a giant sensitivity...
 
-//        Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
-        Scalar lowBound = new Scalar(hue/2-sensitivity,90,100);//lower bound
+        //Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
+        Scalar lowBound = new Scalar(hue/2-sensitivity,127.5,100);//lower bound
         Scalar hiBound = new Scalar(hue/2+sensitivity,255,200);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
