@@ -21,12 +21,12 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Camera Testing idk")//great name....
+@Autonomous(name = "Camera Testing idk")
 public class CameraTest extends LinearOpMode {
     OpenCvCamera cam;// webcam
     int width;
     int height;
-    Pipeline mainPipeline;
+    CVClass2 mainPipeline;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -36,11 +36,11 @@ public class CameraTest extends LinearOpMode {
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                mainPipeline = new Pipeline();//create new pipeline
+                mainPipeline = new CVClass2();//create new pipeline
                 cam.setPipeline(mainPipeline);//set webcam pipeline
 
-                width = 640;
-                height = 480;
+                width = 160; //640
+                height = 90; //480
 
                 cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
             }
@@ -53,17 +53,10 @@ public class CameraTest extends LinearOpMode {
         });
 
         waitForStart();
-
+        while(opModeIsActive()){
+            telemetry.addData("signal",mainPipeline.getSignal());
+        }
         //now start button is pressed, robot go!
     }
 
-    class Pipeline extends OpenCvPipeline{
-        Mat hsv = new Mat();
-
-        @Override
-        public Mat processFrame(Mat input){
-            Imgproc.cvtColor(input, hsv, Imgproc.COLOR_BGR2HSV);
-            return hsv;
-        }
-    }
 }

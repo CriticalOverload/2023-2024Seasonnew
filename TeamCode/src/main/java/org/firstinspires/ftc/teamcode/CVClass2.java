@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Config
-public class CVClassTry2 extends OpenCvPipeline{
+public class CVClass2 extends OpenCvPipeline{
     Mat output = new Mat();//output mat
 
     Rect yellowbox;//draws box
