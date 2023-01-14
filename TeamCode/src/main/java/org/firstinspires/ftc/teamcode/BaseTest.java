@@ -29,6 +29,7 @@ public class BaseTest extends LinearOpMode {
         motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        motorLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         double powerMod = 1.0;
 
