@@ -87,7 +87,7 @@ public class OLDAuto_NewRedTerminal extends LinearOpMode {
         robot.pickUp(0.5);
         //5. place depending on signal
         //place in low close to stack
-        robot.goToMid(0.5,false);
+       // robot.goToMid(0.5,false);
         //go back to pickup a cone
         robot.gyroTurn(90,0.5);
         //drive to wall...

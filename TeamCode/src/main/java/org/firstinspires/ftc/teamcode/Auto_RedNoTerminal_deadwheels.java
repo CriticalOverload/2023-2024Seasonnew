@@ -80,10 +80,10 @@ public class Auto_RedNoTerminal_deadwheels extends LinearOpMode {
         // go forward a square
         //drop the cone
         robot.gyroStrafeEncoder_deadWheels(0.5,-90,4);
-        robot.gyroTurn_PID(180,0.5);
+        //robot.gyroTurn_PID(180,0.5);
         //3. turn and go to cone stack and align vertically
         robot.gyroStrafeEncoder_deadWheels(0.5,90,34);
-        robot.gyroTurn_PID(-90,0.5);
+        //robot.gyroTurn_PID(-90,0.5);
         robot.gyroStrafeEncoder_deadWheels(0.5,90,1.5);
         robot.moveSlides(1,0.5);
         robot.openClaw();
@@ -94,7 +94,7 @@ public class Auto_RedNoTerminal_deadwheels extends LinearOpMode {
         robot.moveSlides(2,0.5);
         robot.pickUp(0.5);
 
-        robot.goToMid(0.5,true);//edit blue?
+        //robot.goToMid(0.5,true);//edit blue?
         }
     }
 

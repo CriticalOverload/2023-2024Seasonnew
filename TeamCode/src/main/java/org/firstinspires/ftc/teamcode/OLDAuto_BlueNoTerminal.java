@@ -95,7 +95,7 @@ public class OLDAuto_BlueNoTerminal extends LinearOpMode {
 
                 robot.pickUp(0.5);
                 //go to low close to stack and audience then park
-                robot.goToMid(0.5,true);
+                //robot.goToMid(0.5,true);
                 //park
                 robot.gyroStrafeEncoder_noimu(0.5,180,12);
                 break;
@@ -103,7 +103,7 @@ public class OLDAuto_BlueNoTerminal extends LinearOpMode {
             case 3:
             default:
                 //place in low close to stack
-                robot.goToMid(0.5,true);
+                //robot.goToMid(0.5,true);
                 //go back to pickup a cone
                 robot.gyroTurn(90,0.5);
                 //drive to wall...

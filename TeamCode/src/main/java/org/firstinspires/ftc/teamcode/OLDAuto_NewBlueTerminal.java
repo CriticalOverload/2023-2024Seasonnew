@@ -88,7 +88,7 @@ public class OLDAuto_NewBlueTerminal extends LinearOpMode {
         robot.pickUp(0.5);
         //5. place depending on signal
         //place in low close to stack
-        robot.goToMid(0.5,true);
+       // robot.goToMid(0.5,true);
         //go back to pickup a cone
         //drive to wall...
         robot.gyroStrafeEncoder(0.5,90,16);

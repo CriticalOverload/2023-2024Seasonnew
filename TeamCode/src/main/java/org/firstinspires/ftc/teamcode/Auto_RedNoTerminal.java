@@ -92,7 +92,7 @@ public class Auto_RedNoTerminal extends LinearOpMode {
         robot.moveSlides(0,0.5);
         robot.closeClaw();
 
-        robot.goToMid(0.5,true);//edit blue?
+        //robot.goToMid(0.5,true);//edit blue?
         }
     }
 
