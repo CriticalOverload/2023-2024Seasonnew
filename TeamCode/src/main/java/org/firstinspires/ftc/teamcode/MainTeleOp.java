@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "Main TeleOp")
+@TeleOp(name = "DONT RUN THIS RITHIN Main TeleOp")
 public class MainTeleOp extends LinearOpMode {
     private DcMotor motorFR,motorBR,motorFL,motorBL,slide;
     private Servo claw;

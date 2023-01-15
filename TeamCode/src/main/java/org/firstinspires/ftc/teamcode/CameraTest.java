@@ -21,42 +21,46 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Camera Testing idk")
+@Autonomous(name = "Camera Testing idk")//great name....
 public class CameraTest extends LinearOpMode {
     OpenCvCamera cam;// webcam
-    int width;
-    int height;
+    int width = 640;
+    int height = 480;
     CVClass2 mainPipeline;
 
     @Override
     public void runOpMode() throws InterruptedException{
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());//view for viewing what the webcam sees I think, on ds. Double check :grimacing:
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-
+        mainPipeline = new CVClass2();//create new pipeline
+        
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened() {
-                mainPipeline = new CVClass2();//create new pipeline
+            public void onOpened() {        
                 cam.setPipeline(mainPipeline);//set webcam pipeline
-
-                width = 160; //640
-                height = 90; //480
-
                 cam.startStreaming(width, height, OpenCvCameraRotation.UPRIGHT);//can add rotation if needed
             }
-
+            
             @Override
             public void onError(int errorCode) {
                 telemetry.addData("Camera Error...",":(");
+                telemetry.update();
                 System.exit(0);
             }
         });
 
+        telemetry.addData("signal:",mainPipeline.getSignal());
+        telemetry.update();
+        
         waitForStart();
+        
         while(opModeIsActive()){
-            telemetry.addData("signal",mainPipeline.getSignal());
+            telemetry.addData("signal:",mainPipeline.getSignal());
+            telemetry.addData("boxHeight", mainPipeline.getHeight());
+            telemetry.update();
         }
         //now start button is pressed, robot go!
     }
 
+    
 }

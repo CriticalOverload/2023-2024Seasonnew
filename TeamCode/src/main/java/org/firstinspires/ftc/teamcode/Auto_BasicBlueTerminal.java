@@ -25,7 +25,7 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
     private OpenCvCamera cam;// webcam
     private int width = 640;
     private int height = 480;
-    private CVClass mainPipeline;
+    private CVClass2 mainPipeline;
 
     private int signal;
 
@@ -46,7 +46,7 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-        mainPipeline = new CVClass();//create new pipeline
+        mainPipeline = new CVClass2();//create new pipeline
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
@@ -96,7 +96,6 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-        signal = 3;
         switch(signal){
             case 1:
                 robot.gyroStrafeEncoder(0.5,10,54);

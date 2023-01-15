@@ -37,8 +37,10 @@ public class BaseTest extends LinearOpMode {
 
         while(opModeIsActive()){
 
-            if(gamepad1.right_bumper){
+            if(gamepad1.right_bumper) {
                 powerMod = 0.5;
+            }else if(gamepad1.left_bumper){
+                powerMod = 0.4;
             }else{
                 powerMod = 1.0;
             }
@@ -59,7 +61,7 @@ public class BaseTest extends LinearOpMode {
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
-            motorLS.setPower(-gamepad2.right_stick_y * 0.5);
+            motorLS.setPower(gamepad2.right_stick_y * 0.5);
 
 
             //Claw

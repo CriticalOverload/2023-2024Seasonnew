@@ -18,10 +18,10 @@ import java.util.List;
 public class CVClass2 extends OpenCvPipeline{
     Mat output = new Mat();//output mat
 
-    Rect yellowbox;//draws box
+    Rect greenbox;//draws box
 
     int signal = 0; //1 left, 2 mid, 3 right. 0 means default to left.
-
+    int height;
     @Override
     public Mat processFrame(Mat input){
         /*
@@ -37,31 +37,32 @@ public class CVClass2 extends OpenCvPipeline{
         //https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
         //also test using RETR_TREE idk what the difference is. probably just method todo
 
-        List<MatOfPoint> yellowContours = getYellow(input);
+        List<MatOfPoint> greenContours = getGreen(input);
         input.copyTo(output);
 
         //need to draw the rectangles first...
 
-        if(yellowContours.size() > 0){
+        if(greenContours.size() > 0){
             double max = 0;
             int maxInd = 0;
-            for(int i = 0; i < yellowContours.size(); i++){//loop through all the contours, and find the largest box
-                double area = Imgproc.contourArea(yellowContours.get(i));
+            for(int i = 0; i < greenContours.size(); i++){//loop through all the contours, and find the largest box
+                double area = Imgproc.contourArea(greenContours.get(i));
                 if(area > max){
                     max = area;
                     maxInd = i;
                 }
             }
             //draw a box of the largest one of single color
-            Rect largestRect = Imgproc.boundingRect(yellowContours.get(maxInd));
-            yellowbox = largestRect;
+            Rect largestRect = Imgproc.boundingRect(greenContours.get(maxInd));
+            greenbox = largestRect;
+            height = greenbox.height;
             Scalar boxColor = new Scalar(0, 255, 255);//not white... something!!
-            Imgproc.rectangle(output, yellowbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
+            Imgproc.rectangle(output, greenbox, boxColor, 3, 8, 0);//Currently boxed based on rectangle
         }
 
 
-        if(yellowContours.size() > 0){//in other words, it found yellow
-            if (yellowbox.height < 100){
+        if(greenContours.size() > 0){//in other words, it found yellow
+            if (greenbox.height < 100){
                 signal = 2;
             }
             else{
@@ -76,7 +77,7 @@ public class CVClass2 extends OpenCvPipeline{
 
     //related
     //https://alloyui.com/examples/color-picker/hsv.html
-    public List<MatOfPoint> getYellow(Mat input){
+    public List<MatOfPoint> getGreen(Mat input){
         Mat output = new Mat();//output mat
         Mat hsv = new Mat();//after hsv
         Mat blur = new Mat();//after blur
@@ -97,20 +98,30 @@ public class CVClass2 extends OpenCvPipeline{
 
         //find contours:
         //using HSV
-        double hue = 25;
-        double sensitivity = 10;//to adjust for slight variations. Ewww that's a giant sensitivity...
+        double hue = 135;
+        double sensitivity = 15;//to adjust for slight variations. Ewww that's a giant sensitivity...
 
 //        Scalar lowBound = new Scalar((hue/2)-sensitivity,100,50);//lower bound... may be wrong???
-        Scalar lowBound = new Scalar(hue-sensitivity,100,127);//lower bound
-        Scalar hiBound = new Scalar(hue+sensitivity,255,255);//higher bound
+        Scalar lowBound = new Scalar(hue/2-sensitivity,100,50);//lower bound
+        Scalar hiBound = new Scalar(hue/2+sensitivity,255,255);//higher bound
         Core.inRange(hsv, lowBound, hiBound, singleColor);//source, low bound, high bound, destination. Gets all color within given range, removes all others
         Imgproc.findContours(singleColor, contours, hierarchy, Imgproc.RETR_LIST,Imgproc.CHAIN_APPROX_SIMPLE);//source, contours list, hierarchy mat, int for code, and int method
-
+        output.release();
+        hsv.release();
+        singleColor.release();
+        blur.release();
+        hierarchy.release();
         return contours;
     }
 
     public int getSignal() {
         return signal;
     }
-    public int getHeight(){return yellowbox.height;}
+    public int getHeight(){
+        if(greenbox != null)
+            return greenbox.height;
+        return -1;
+
+
+    }
 }

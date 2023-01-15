@@ -25,7 +25,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
     private OpenCvCamera cam;// webcam
     private int width = 640;
     private int height = 480;
-    private CVClass mainPipeline;
+    private CVClass2 mainPipeline;
 
     private int signal;
 
@@ -46,7 +46,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-        mainPipeline = new CVClass();//create new pipeline
+        mainPipeline = new CVClass2();//create new pipeline
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
@@ -62,13 +62,17 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        signal = mainPipeline.getSignal();
-        telemetry.addData("signal",signal);
-        telemetry.update();
+        while(opModeIsActive() == false){
+            signal = mainPipeline.getSignal();
+            telemetry.addData("signal", signal);
+            telemetry.update();
+        }
         waitForStart();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
-
+        signal = mainPipeline.getSignal();
+        telemetry.addData("signal",signal);
+        telemetry.update();
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
@@ -92,11 +96,10 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-        signal = 3;
             switch(signal){
                 case 1:
-                    robot.gyroStrafeEncoder(0.5,10,5);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
+                    robot.gyroStrafeEncoder(0.5,180,3.5);
+                    robot.gyroStrafeEncoder(0.5,-90,32);
                     break;
                 case 2:
                     robot.gyroStrafeEncoder(0.5,180,28);
