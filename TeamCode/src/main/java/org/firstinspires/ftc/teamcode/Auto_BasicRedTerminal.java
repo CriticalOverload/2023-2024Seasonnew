@@ -82,7 +82,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
-        robot.gyroStrafeEncoder(0.5,-90,4);
+        // robot.gyroStrafeEncoder(0.5,-90,4);
 
 
 //        robot.moveSlides(0,0.3);
@@ -92,21 +92,22 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-
+        signal = 3;
             switch(signal){
                 case 1:
-                    robot.gyroStrafeEncoder(0.5,-90,20);
+                    robot.gyroStrafeEncoder(0.5,10,5);
+                    robot.gyroStrafeEncoder(0.5,-90,30);
                     break;
                 case 2:
-                    robot.gyroStrafeEncoder(0.5,-90,20);
-                    robot.gyroStrafeEncoder(0.5,180,24);
+                    robot.gyroStrafeEncoder(0.5,180,28);
+                    robot.gyroStrafeEncoder(0.5,-90,30);
                     //change strafing angle so that it adjusts to the tilt
                     //move somehow
                     break;
 //            default:
                 case 3:
-                    robot.gyroStrafeEncoder(0.5,-90,20);
-                    robot.gyroStrafeEncoder(0.5,180,48);
+                    robot.gyroStrafeEncoder(0.5,180,54);
+                    robot.gyroStrafeEncoder(0.5,-90,30);
                     //move
                     break;
             }
