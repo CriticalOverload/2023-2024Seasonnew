@@ -54,10 +54,15 @@ public class BaseTest extends LinearOpMode {
                 slidePMod = 0.35;
                 telemetry.addData("left bumper","gamepad2");
             }else{
-                slidePMod = 1.2;
+                slidePMod = 0.6;
             }
 
-
+            if(gamepad1.dpad_up){
+                motorFrontLeft.setPower(powerMod);
+                motorFrontRight.setPower(powerMod);
+                motorBackLeft.setPower(powerMod);
+                motorBackRight.setPower(powerMod);
+            }
 
 
             double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - (Math.PI/4);
@@ -73,7 +78,7 @@ public class BaseTest extends LinearOpMode {
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
-            motorLS.setPower(gamepad2.right_stick_y * 0.4);
+            motorLS.setPower(gamepad2.right_stick_y * slidePMod);
 
 
             //Claw
