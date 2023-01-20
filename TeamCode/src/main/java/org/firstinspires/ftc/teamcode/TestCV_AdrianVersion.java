@@ -21,7 +21,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name = "Testing based on Adrian example")
+//@Autonomous(name = "Testing based on Adrian example")
 public class TestCV_AdrianVersion extends LinearOpMode {
     double hue;//color we want, yellow
     OpenCvCamera cam;// webcam

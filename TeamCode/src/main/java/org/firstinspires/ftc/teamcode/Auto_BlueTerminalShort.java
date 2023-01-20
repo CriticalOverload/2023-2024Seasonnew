@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic LEFT Red Terminal")
-public class Auto_BasicRedTerminal extends LinearOpMode {
+//@Autonomous(name="AA Blue Terminal Short")
+public class Auto_BlueTerminalShort extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -25,7 +25,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
     private OpenCvCamera cam;// webcam
     private int width = 640;
     private int height = 480;
-    private CVClass2 mainPipeline;
+    private CVClass mainPipeline;
 
     private int signal;
 
@@ -36,7 +36,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
-        signal = 3;
+        signal = 1;
         claw = hardwareMap.servo.get("claw");
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -46,7 +46,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         cam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), camViewID);
-        mainPipeline = new CVClass2();//create new pipeline
+        mainPipeline = new CVClass();//create new pipeline
 
         cam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {//on-ing the camera
             @Override
@@ -62,17 +62,13 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
-            signal = mainPipeline.getSignal();
-            telemetry.addData("signal", signal);
-            telemetry.update();
-        }
+
+        signal = mainPipeline.getSignal();
+        telemetry.addData("signal",signal);
         waitForStart();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
-        signal = mainPipeline.getSignal();
-        telemetry.addData("signal",signal);
-        telemetry.update();
+
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
@@ -84,11 +80,9 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         // go forward a square
         //drop the cone
         robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
-        robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
+//        robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
-        // robot.gyroStrafeEncoder(0.5,-90,4);
-
-
+        robot.gyroStrafeEncoder(0.5,-90,4);
 //        robot.moveSlides(0,0.3);
 //        //3. turn and go to cone stack and align vertically
 //        robot.closeClaw();
@@ -96,25 +90,21 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-            switch(signal){
-                case 1:
-                    robot.gyroStrafeEncoder(0.5,180,25);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    robot.gyroStrafeEncoder(0.5,0,25);
-                    break;
-                case 2:
-                    robot.gyroStrafeEncoder(0.5,180,28);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //change strafing angle so that it adjusts to the tilt
-                    //move somehow
-                    break;
-//            default:
-                case 3:
-                    robot.gyroStrafeEncoder(0.5,180,54);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //move
-                    break;
-            }
+
+        switch(signal){
+            case 1:
+                robot.gyroStrafeEncoder(0.5,180,6);
+                break;
+            case 2:
+                robot.gyroStrafeEncoder(0.5,0,6);
+                //move somehow
+                break;
+            default:
+            case 3:
+                robot.gyroStrafeEncoder(0.5,0,28);
+                //move
+                break;
+        }
 
 
     }

@@ -9,7 +9,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Auto test detect")
+//@Autonomous(name = "Auto test detect")
 @Config
 public class AutoTestDetect extends LinearOpMode {
     //for OpenCV

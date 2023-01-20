@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="newdistance")
+//@Autonomous(name="newdistance")
 public class NewDistance extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
 

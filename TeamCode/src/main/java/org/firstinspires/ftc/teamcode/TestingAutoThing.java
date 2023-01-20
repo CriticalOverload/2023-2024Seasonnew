@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous (name = "Testing to make sure it works")
+//@Autonomous (name = "Testing to make sure it works")
 @Config
 public class TestingAutoThing extends LinearOpMode {
 

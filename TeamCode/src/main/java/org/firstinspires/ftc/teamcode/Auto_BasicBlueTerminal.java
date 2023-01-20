@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic Blue Terminal")
+@Autonomous(name="AA Basic RIGHT Blue Terminal")
 public class Auto_BasicBlueTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
@@ -83,7 +83,7 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
+        //robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
 //        robot.gyroStrafeEncoder(0.5,-90,4);
@@ -109,8 +109,9 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
                 break;
 //            default:
             case 3:
-                robot.gyroStrafeEncoder(0.5,10,5);
+                robot.gyroStrafeEncoder(0.5,10,25);
                 robot.gyroStrafeEncoder(0.5,-90,30);
+                robot.gyroStrafeEncoder(0.5,180, 25);
                 //move
                 break;
         }

@@ -11,7 +11,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="Auto Red No Terminal - dead wheels")
+//@Autonomous(name="Auto Red No Terminal - dead wheels")
 public class Auto_RedNoTerminal_deadwheels extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor leftEncoder, rightEncoder, backEncoder;

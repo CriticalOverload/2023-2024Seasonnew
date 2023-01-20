@@ -786,7 +786,7 @@ public class RobotClass2 {
         int mod = 1;
         if(blue)
             mod=-1;
-        gyroStrafeEncoder(power*mod,10,28);//may need more, basically go to the wall
+        gyroStrafeEncoder(power*mod,10,30);//may need more, basically go to the wall
 //        openClaw();
         sleep(500);
 //        moveSlides(1,0.3);
