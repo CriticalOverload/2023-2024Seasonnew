@@ -54,7 +54,7 @@ public class BaseTest extends LinearOpMode {
                 slidePMod = 0.35;
                 telemetry.addData("left bumper","gamepad2");
             }else{
-                slidePMod = 0.6;
+                slidePMod = 1.0;
             }
 
             if(gamepad1.dpad_up){
@@ -78,12 +78,12 @@ public class BaseTest extends LinearOpMode {
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
-            motorLS.setPower(gamepad2.right_stick_y * slidePMod);
+            motorLS.setPower(gamepad2.right_stick_y * 0.6);
 
 
             //Claw
             if (gamepad2.dpad_up) {
-                servo.setPosition(1.0);
+                servo.setPosition(0.4);
             }
             else if (gamepad2.dpad_down) {
                 servo.setPosition(0.0);

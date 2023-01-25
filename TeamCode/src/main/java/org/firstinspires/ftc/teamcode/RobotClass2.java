@@ -779,6 +779,8 @@ public class RobotClass2 {
         }
     }
 
+
+
     /**
      * used by terminal autos to get from starting position to terminal
      */
@@ -786,7 +788,7 @@ public class RobotClass2 {
         int mod = 1;
         if(blue)
             mod=-1;
-        gyroStrafeEncoder(power*mod,10,30);//may need more, basically go to the wall
+        gyroStrafeEncoder(power*mod,10,30 );//may need more, basically go to the wall
 //        openClaw();
         sleep(500);
 //        moveSlides(1,0.3);
@@ -794,6 +796,41 @@ public class RobotClass2 {
 
         //lift up slide TODO
     }
+
+    public void conestack_1(boolean blue) throws InterruptedException{
+        if(blue){
+            gyroTurn(90,0.5);// Turn towards stack
+            gyroStrafeEncoder(0.3,90,17); //move towards stack
+//            gyroStrafeEncoder(0.3,90,2); //move slowly towards stack
+            gyroStrafeEncoder(0.5,-90,22); //move backwards junction
+            gyroTurn(80, 0.5); //turns toward nunction
+            gyroStrafeEncoder(0.5,180,14); //strafe left towards junction
+//            gyroStrafeEncoder(0.4,90,4); //go toward junction
+//            gyroStrafeEncoder(0.4,-90,4); //move back from junction
+//            gyroTurn(-90, 0.5); //turn toward conestack
+        }
+        else{
+
+        }
+
+    }
+
+    public void conestack_2(boolean blue) throws InterruptedException{
+        if(blue){
+            gyroStrafeEncoder(0.6,90,23); //move towards stack
+            gyroStrafeEncoder(0.3,90,22); //move slowly towards stack
+            gyroStrafeEncoder(0.6,-90,37); //move backwards junction
+            gyroTurn(90, 0.5); //turns toward junction
+            gyroStrafeEncoder(0.4,90,4); //go toward junction
+            gyroStrafeEncoder(0.4,-90,4); //move back from junction
+            gyroTurn(-90, 0.5); //turn toward conestack
+        }
+        else{
+
+        }
+
+    }
+
 
     //attachments
 
@@ -851,6 +888,8 @@ public class RobotClass2 {
     public void openClaw(){
         claw.setPosition(0.5);
     }
+
+
 
     public void closeClaw(){
         claw.setPosition(-1);

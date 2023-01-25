@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic LEFT Red Terminal")
-public class Auto_BasicRedTerminal extends LinearOpMode {
+@Autonomous(name="AA ADVANCED RIGHT Blue Terminal")
+public class Auto_AdvancedBlueTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -36,7 +36,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
-        signal = 3;
+        signal = 2;
         claw = hardwareMap.servo.get("claw");
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -83,11 +83,14 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
-        robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
+        //robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
+        robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
-        // robot.gyroStrafeEncoder(0.5,-90,4);
-
+//        robot.gyroStrafeEncoder(0.5,-90,4);
+        robot.gyroStrafeEncoder(0.5,10,28);
+        robot.gyroStrafeEncoder(0.5,-90,55);
+        robot.gyroStrafeEncoder(0.5,90,4);
+        robot.conestack_1(true);
 
 //        robot.moveSlides(0,0.3);
 //        //3. turn and go to cone stack and align vertically
@@ -96,25 +99,25 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-            switch(signal){
-                case 1:
-                    robot.gyroStrafeEncoder(0.5,180,25);
-                    robot.gyroStrafeEncoder(0.5,-90,26);
-                    robot.gyroStrafeEncoder(0.5,0,25);
-                    break;
-                case 2:
-                    robot.gyroStrafeEncoder(0.5,180,28);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //change strafing angle so that it adjusts to the tilt
-                    //move somehow
-                    break;
-//            default:
-                case 3:
-                    robot.gyroStrafeEncoder(0.5,180,54);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //move
-                    break;
-            }
+//        switch(signal){
+//            case 1:
+//                robot.gyroStrafeEncoder(0.5,10,54);
+//                robot.gyroStrafeEncoder(0.5,-90,30);
+//
+//                break;
+//            case 2:
+//                robot.gyroStrafeEncoder(0.5,10,28);
+//                robot.gyroStrafeEncoder(0.5,-90,30);
+//                //move somehow
+//                break;
+////            default:
+//            case 3:
+//                robot.gyroStrafeEncoder(0.5,10,25);
+//                robot.gyroStrafeEncoder(0.5,-90,30);
+//                robot.gyroStrafeEncoder(0.5,180, 25);
+//                //move
+//                break;
+//        }
 
 
     }

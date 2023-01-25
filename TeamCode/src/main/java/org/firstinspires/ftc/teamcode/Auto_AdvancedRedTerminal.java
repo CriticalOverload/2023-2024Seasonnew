@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic LEFT Red Terminal")
-public class Auto_BasicRedTerminal extends LinearOpMode {
+@Autonomous(name="AA Advanced LEFT Red Terminal")
+public class Auto_AdvancedRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -85,6 +85,8 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         //drop the cone
         robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
+        robot.gyroStrafeEncoder(0.5,180,28);
+        robot.gyroStrafeEncoder(0.5,-90,30);
 //        robot.moveSlides(2,0.3);
         // robot.gyroStrafeEncoder(0.5,-90,4);
 
@@ -96,25 +98,25 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-            switch(signal){
-                case 1:
-                    robot.gyroStrafeEncoder(0.5,180,25);
-                    robot.gyroStrafeEncoder(0.5,-90,26);
-                    robot.gyroStrafeEncoder(0.5,0,25);
-                    break;
-                case 2:
-                    robot.gyroStrafeEncoder(0.5,180,28);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //change strafing angle so that it adjusts to the tilt
-                    //move somehow
-                    break;
+        switch(signal){
+            case 1:
+                robot.gyroStrafeEncoder(0.5,180,25);
+                robot.gyroStrafeEncoder(0.5,-90,26);
+                robot.gyroStrafeEncoder(0.5,0,25);
+                break;
+            case 2:
+                robot.gyroStrafeEncoder(0.5,180,28);
+                robot.gyroStrafeEncoder(0.5,-90,30);
+                //change strafing angle so that it adjusts to the tilt
+                //move somehow
+                break;
 //            default:
-                case 3:
-                    robot.gyroStrafeEncoder(0.5,180,54);
-                    robot.gyroStrafeEncoder(0.5,-90,30);
-                    //move
-                    break;
-            }
+            case 3:
+                robot.gyroStrafeEncoder(0.5,180,54);
+                robot.gyroStrafeEncoder(0.5,-90,30);
+                //move
+                break;
+        }
 
 
     }
