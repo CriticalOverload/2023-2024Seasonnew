@@ -83,7 +83,7 @@ public class BaseTest extends LinearOpMode {
 
             //Claw
             if (gamepad2.dpad_up) {
-                servo.setPosition(0.4);
+                servo.setPosition(0.5);
             }
             else if (gamepad2.dpad_down) {
                 servo.setPosition(0.0);
