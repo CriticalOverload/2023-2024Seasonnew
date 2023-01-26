@@ -785,6 +785,7 @@ public class RobotClass2 {
      * used by terminal autos to get from starting position to terminal
      */
     public void dropInTerminal(double power, boolean blue) throws InterruptedException{
+        gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         int mod = 1;
         if(blue)
             mod=-1;
@@ -832,6 +833,49 @@ public class RobotClass2 {
     }
 
 
+    /**
+     * Does Autonomous
+     * @param leftSide true if on left, false if on right
+     * */
+    public void doAuto(int signal, boolean leftSide) throws InterruptedException{
+        //insert stuff once I can figure out what in the world is going on with the auto :sob::sob::sob:
+        dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
+        switch(signal){
+            case 1:
+                if(leftSide) {
+                    gyroStrafeEncoder(0.5,180,25);
+                    gyroStrafeEncoder(0.5,-90,30);
+                    gyroStrafeEncoder(0.5,0,25);
+                }
+                else{
+                    gyroStrafeEncoder(0.5, 10, 54);
+                    gyroStrafeEncoder(0.5, -90, 30);
+                }
+                break;
+            case 2:
+                if(leftSide){
+                    gyroStrafeEncoder(0.5,180,28);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                else{
+                    gyroStrafeEncoder(0.5,10,28);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                break;
+            case 3:
+            default:
+                if(leftSide){
+                    gyroStrafeEncoder(0.5,180,54);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                else{
+                    gyroStrafeEncoder(0.5,10,25);
+                    gyroStrafeEncoder(0.5,-90,30);
+                    gyroStrafeEncoder(0.5,180, 25);
+                }
+                break;
+        }
+    }
     //attachments
 
     /**

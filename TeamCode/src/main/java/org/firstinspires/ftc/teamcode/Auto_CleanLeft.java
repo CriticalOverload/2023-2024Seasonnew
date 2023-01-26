@@ -12,8 +12,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic LEFT Red Terminal")
-public class Auto_BasicRedTerminal extends LinearOpMode {
+@Autonomous(name="AA Clean Left Auto")
+public class Auto_CleanLeft extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
@@ -37,7 +37,6 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
         claw = hardwareMap.servo.get("claw");
-//        signal = 3;
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
@@ -62,11 +61,11 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
+        while(!opModeIsActive()) {
             signal = mainPipeline.getSignal();
             telemetry.addData("signal", signal);
             telemetry.update();
-        }//but why
+        }
         waitForStart();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
@@ -76,29 +75,6 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
-
-        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
-        robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
-        switch(signal){
-            case 1:
-                robot.gyroStrafeEncoder(0.5,180,25);
-                robot.gyroStrafeEncoder(0.5,-90,30);
-                robot.gyroStrafeEncoder(0.5,0,25);
-                break;
-            case 2:
-                robot.gyroStrafeEncoder(0.5,180,28);
-                robot.gyroStrafeEncoder(0.5,-90,30);
-                //change strafing angle so that it adjusts to the tilt
-                //move somehow
-                break;
-            case 3:
-            default:
-                robot.gyroStrafeEncoder(0.5,180,54);
-                robot.gyroStrafeEncoder(0.5,-90,30);
-                //move
-                break;
-        }
-
-
+        robot.doAuto(signal,true);
     }
 }

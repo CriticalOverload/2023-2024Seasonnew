@@ -62,7 +62,7 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
+        while(!opModeIsActive()) {
             signal = mainPipeline.getSignal();
             telemetry.addData("signal", signal);
             telemetry.update();
@@ -76,26 +76,8 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
-        //todo: test and update
-        //also roadrunner...
 
-        //2. drop in terminal
-        //turn ccw 90
-        // go forward a square
-        //drop the cone
-        //robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
-//        robot.moveSlides(2,0.3);
-//        robot.gyroStrafeEncoder(0.5,-90,4);
-
-
-//        robot.moveSlides(0,0.3);
-//        //3. turn and go to cone stack and align vertically
-//        robot.closeClaw();
-//        robot.gyroStrafeEncoder(0.5,-65,40);//backwards... may make it a slight to the rightish to avoid knocking into stack or another robot
-//        robot.gyroTurn(90,0.5);
-//        robot.moveSlides(4, 0.5);
-//        robot.openClaw();
         switch(signal){
             case 1:
                 robot.gyroStrafeEncoder(0.5,10,54);
@@ -107,8 +89,8 @@ public class Auto_BasicBlueTerminal extends LinearOpMode {
                 robot.gyroStrafeEncoder(0.5,-90,30);
                 //move somehow
                 break;
-//            default:
             case 3:
+            default:
                 robot.gyroStrafeEncoder(0.5,10,25);
                 robot.gyroStrafeEncoder(0.5,-90,30);
                 robot.gyroStrafeEncoder(0.5,180, 25);
