@@ -8,13 +8,16 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class RobotClass2 {
@@ -23,8 +26,13 @@ public class RobotClass2 {
     private DcMotor viperslide;
     private Servo claw;
 
+    //deadwheel stuff
     private DcMotor leftEncoder, rightEncoder, backEncoder;
     boolean deadWheels = false;
+
+    //sensors
+    private DistanceSensor distSensor;
+    private TouchSensor stopButton;
 
     //imu stuff
     private BNO055IMU imu;
@@ -96,6 +104,36 @@ public class RobotClass2 {
         deadWheels = true;
     }
 
+        /**
+     * Full Constructor without encoders and touch and distance sensor
+     * @param motorFL front left motor
+     * @param motorFR front right motor
+     * @param motorBL back left motor
+     * @param motorBR back right motor
+     * @param viperslide slide motor
+     * @param claw claw servo
+     * @param stopButton touch sensor
+     * @param distSensor distance sensor
+     * @param imu imu
+     * @param opMode From the opMode we get telemetry
+     * @param yesDash if we're using the dashboard
+     * */
+    public RobotClass2(DcMotor motorFL,DcMotor motorFR,DcMotor motorBL, DcMotor motorBR, DcMotor viperslide, Servo claw, TouchSensor stopButton, DistanceSensor distSensor, BNO055IMU imu, LinearOpMode opMode, boolean yesDash){
+        this.motorFL = motorFL;
+        this.motorFR = motorFR;
+        this.motorBL = motorBL;
+        this.motorBR = motorBR;
+        this.viperslide = viperslide;
+        this.claw = claw;
+        this.stopButton = stopButton;
+        this.distSensor = distSensor;
+        this.imu = imu;
+        this.opMode = opMode;
+        this.telemetry = opMode.telemetry;
+        motors = new DcMotor[]{this.motorFL, this.motorBR, this.motorBL, this.motorFR};
+        this.yesDash=yesDash;
+    }
+    
     /**
      * Full Constructor without encoders
      * @param motorFL front left motor
@@ -123,7 +161,7 @@ public class RobotClass2 {
     }
 
     /**
-     * Full Constructor without encoders
+     * Full Constructor without encoders no imu
      * @param motorFL front left motor
      * @param motorFR front right motor
      * @param motorBL back left motor
@@ -320,6 +358,29 @@ public class RobotClass2 {
         telemetry.update();
     }
 
+
+    /**
+     * Setup the robot and the telemetry for FTCDashboard
+     yes base
+     yes slide
+     no imu
+     yes claw
+     */
+    public void setupRobot_base_slide_claw_noimu() throws InterruptedException{
+        reverseMotors();
+        for(DcMotor m : motors){
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+        viperslide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        resetEncoders();
+        resetSlides();
+
+        if(yesDash)
+            setupDashboard();
+        claw.setPosition(0);
+        telemetry.addData("IMU", "ready");
+        telemetry.update();
+    }
 
     /**
      * Setup the robot and the telemetry for FTCDashboard
@@ -737,7 +798,30 @@ public class RobotClass2 {
         // resetAngle();
         resetEncoders();
     }
+
     //auto movements and actions
+
+    /**
+     * Drive to wall. Goes straight forwards
+     * Distance sensor tells when to stop (30 cm)
+     positive power backwards, negative power forwards
+     * @param power
+     * @throws InterruptedException
+     */
+    public void driveToWall(double power, double dist) throws InterruptedException{
+        resetAngle();
+        while(distSensor.getDistance(DistanceUnit.INCH) > dist && opMode.opModeIsActive()){
+            double correction = getCorrection();
+            correctedTankStrafe(power, power, correction);
+            telemetry.addData("distance reading", distSensor.getDistance(DistanceUnit.INCH));
+            telemetry.update();
+        }
+//        completeStop();
+//        Thread.sleep(250);
+        resetAngle();
+        //note: NO COMPLETE STOP!!!!!!!!!!!!!!
+    }
+
     public void goToHigh(double power, boolean blue) throws InterruptedException{
         // moveSlides(3,power);
         gyroStrafeEncoder(power,-90,34);
@@ -798,12 +882,14 @@ public class RobotClass2 {
         //lift up slide TODO
     }
 
-    public void conestack_1(boolean blue) throws InterruptedException{
+    public void goToHigh_Initial(boolean blue) throws InterruptedException{
         if(blue){
             gyroTurn(90,0.5);// Turn towards stack
-            gyroStrafeEncoder(0.3,90,17); //move towards stack
-//            gyroStrafeEncoder(0.3,90,2); //move slowly towards stack
-            gyroStrafeEncoder(0.5,-90,22); //move backwards junction
+            driveToWall(1,10);
+            driveToWall(0.25,5);//change power?
+            completeStop();
+
+            gyroStrafeEncoder(0.5,-90,20); //move backwards junction
             gyroTurn(80, 0.5); //turns toward nunction
             gyroStrafeEncoder(0.5,180,14); //strafe left towards junction
 //            gyroStrafeEncoder(0.4,90,4); //go toward junction
@@ -816,7 +902,7 @@ public class RobotClass2 {
 
     }
 
-    public void conestack_2(boolean blue) throws InterruptedException{
+    public void goToHigh_after(boolean blue) throws InterruptedException{
         if(blue){
             gyroStrafeEncoder(0.6,90,23); //move towards stack
             gyroStrafeEncoder(0.3,90,22); //move slowly towards stack
@@ -903,7 +989,7 @@ public class RobotClass2 {
                 break;
             case 2:
                 //medium
-                target = 2891;
+                target = -2891;
                 break;
             case 3:
                 //high
@@ -923,10 +1009,70 @@ public class RobotClass2 {
                 break;
                 
         }
-        viperslide.setPower(power);
+        if(viperslide.getCurrentPosition() < target) {
+            viperslide.setPower(power);
+        }
+        else{
+            viperslide.setPower(-power);
+        }
         viperslide.setTargetPosition(target);
-        while(Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive());
+        while((!stopButton.isPressed())||(Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
         viperslide.setPower(0);
+        
+    }
+
+
+    public void moveSlidesNoTouch(int level, double power){
+        double circumference = 4.409;//circumference of pulley for hub
+//        double groundRN = ; // rotations needed to reach point from 0
+//        double smallRN =;
+        double medRN =26/circumference;
+        double highEP =37/circumference;// (inches from ground / circumference)* ticks
+
+        //setup this with pid stuff
+        int target;
+        switch(level){
+            default:
+            case 0:
+                //pick up
+                target = -389;//2/circumference;//arbitrary todo change!!!
+                break;
+            case 1:
+                //low
+                target = -1685;//16/circumference;
+                break;
+            case 2:
+                //medium
+                target = -2891;
+                break;
+            case 3:
+                //high
+                target = -4065;
+                break;
+            case 4:
+                //ground
+                target = -36;
+                break;
+            case 5:
+                //4cones
+                target = -803;
+                break;
+            case 6:
+                //4cones pickup height
+                target = -750;
+                break;
+
+        }
+        if(viperslide.getCurrentPosition() < target) {
+            viperslide.setPower(power);
+        }
+        else{
+            viperslide.setPower(-power);
+        }
+        viperslide.setTargetPosition(target);
+        while((Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
+        viperslide.setPower(0);
+
     }
 
     public void openClaw(){

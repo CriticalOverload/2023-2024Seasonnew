@@ -4,12 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@TeleOp(name = "Base Test")
-public class BaseTest extends LinearOpMode {
+@TeleOp(name = "AA Main TeleOp test")
+public class MainTeleOpTest extends LinearOpMode {
     private DcMotor motorFrontRight, motorFrontLeft, motorBackLeft, motorBackRight, motorLS;
     private Servo servo;
-    double servoPosition = 0.0;
+    private TouchSensor touch;
+
+    private double powerMod = 0.8;
+    private double slidePMod = 1.0;
+    private RobotClass2 robot;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,20 +24,12 @@ public class BaseTest extends LinearOpMode {
         motorBackRight = hardwareMap.dcMotor.get("BR");
         servo = hardwareMap.servo.get("claw");
         motorLS = hardwareMap.dcMotor.get("LS");
-        servo.setPosition(servoPosition);
+        touch = hardwareMap.get(TouchSensor.class,"touch");
+        
+        robot = new RobotClass2(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, motorLS, servo, null, this, false);
 
-        //reverse the needed motors
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-
-        motorFrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorFrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorBackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motorLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        double powerMod = 0.8;
-        double slidePMod = 1.0;
+        robot.setupRobot_base_slide_claw_noimu();
+        
         waitForStart();
 
         while(opModeIsActive()){
@@ -57,29 +54,31 @@ public class BaseTest extends LinearOpMode {
                 slidePMod = 1.0;
             }
 
-            if(gamepad1.dpad_up){
-                motorFrontLeft.setPower(powerMod);
-                motorFrontRight.setPower(powerMod);
-                motorBackLeft.setPower(powerMod);
-                motorBackRight.setPower(powerMod);
-            }
-
-
             double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - (Math.PI/4);
             double r = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
             double rotation = gamepad1.left_stick_x;
 
             double powerOne = r*Math.sin(angle);
             double powerTwo = r*Math.cos(angle);
-//            double powerOne = r*Math.cos(angle);
-//            double powerTwo = r*Math.sin(angle);
 
             motorFrontLeft.setPower((powerOne - (rotation))*powerMod);
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
+            
             motorLS.setPower(gamepad2.right_stick_y * 0.6);
-
+            if(gamepad2.y){
+                robot.moveSlides(3,slidePMod);
+            }
+            if(gamepad2.x){
+                robot.moveSlides(2,slidePMod);
+            }
+            if(gamepad2.b){
+                robot.moveSlides(1,slidePMod);
+            }
+            if(gamepad2.a){
+                robot.moveSlides(0,slidePMod);
+            }
 
             //Claw
             if (gamepad2.dpad_up) {
