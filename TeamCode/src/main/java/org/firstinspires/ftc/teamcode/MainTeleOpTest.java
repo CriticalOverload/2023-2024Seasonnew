@@ -66,7 +66,7 @@ public class MainTeleOpTest extends LinearOpMode {
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
             
-            motorLS.setPower(gamepad2.right_stick_y * 0.6);
+            motorLS.setPower(gamepad2.right_stick_y * slidePMod);
             if(gamepad2.y){
                 robot.moveSlides('h',slidePMod);
             }

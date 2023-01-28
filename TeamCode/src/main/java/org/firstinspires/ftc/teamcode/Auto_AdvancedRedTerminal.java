@@ -15,7 +15,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA ADVANCED LEFT Red Terminal")
+@Autonomous(name="AA Advanced Left Auto (non-terminal)")
 public class Auto_AdvancedRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;

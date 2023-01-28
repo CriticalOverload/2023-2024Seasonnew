@@ -823,6 +823,7 @@ public class RobotClass2 {
 //        resetAngle();
         //note: NO COMPLETE STOP!!!!!!!!!!!!!!
     }
+    //do a pid thing here??? todo later
 
     public void goToHigh(double power, boolean blue) throws InterruptedException{
         // moveSlides(3,power);
@@ -1068,7 +1069,7 @@ public class RobotClass2 {
             case 'd'://down, pick up position
             case 'm'://medium
             case 'l'://low
-                //pick up 
+                //pick up
                 target = -389;
                 break;
             case 'h'://high
@@ -1097,7 +1098,7 @@ public class RobotClass2 {
         viperslide.setTargetPosition(target);
         while((!stopButton.isPressed())&&(Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
         viperslide.setPower(0);
-        
+
     }
 
     public void openClaw(){

@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic LEFT Red Terminal")
+@Autonomous(name="AA Basic Left Auto (non-terminal)")
 public class Auto_BasicRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;

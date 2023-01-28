@@ -65,7 +65,7 @@ public class MainTeleOp extends LinearOpMode {
                 slidePMod = 0.35;
                 telemetry.addData("left bumper","gamepad2");
             }else{
-                slidePMod = 1.0;
+                slidePMod = 0.6;
             }
 
             double angle = Math.atan2(gamepad1.right_stick_y, gamepad1.right_stick_x) - (Math.PI/4);
@@ -81,7 +81,7 @@ public class MainTeleOp extends LinearOpMode {
             motorFrontRight.setPower((powerTwo + (rotation))*powerMod);
             motorBackLeft.setPower((powerTwo - (rotation))*powerMod);
             motorBackRight.setPower((powerOne + (rotation))*powerMod);
-            motorLS.setPower(gamepad2.right_stick_y * 0.6);
+            motorLS.setPower(gamepad2.right_stick_y * slidePMod);
 
 
             //Claw
