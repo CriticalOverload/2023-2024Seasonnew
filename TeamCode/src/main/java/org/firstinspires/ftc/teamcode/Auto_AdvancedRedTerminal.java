@@ -4,19 +4,24 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCaptureSequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Advanced LEFT Red Terminal")
+@Autonomous(name="AA ADVANCED LEFT Red Terminal")
 public class Auto_AdvancedRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
     private Servo claw;
+    private TouchSensor touch;
+    private DistanceSensor distSensor;
 
     private BNO055IMU imu;
 
@@ -36,12 +41,15 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
         motorFL = hardwareMap.dcMotor.get("FL");
         motorBL = hardwareMap.dcMotor.get("BL");
         slides = hardwareMap.dcMotor.get("LS");
-        signal = 3;
+        // signal = 2;
+        distSensor = hardwareMap.get(DistanceSensor.class, "distSensor");
+        touch = hardwareMap.get(TouchSensor.class, "touchSensor");
         claw = hardwareMap.servo.get("claw");
+
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, imu, this, false);
+        robot = new RobotClass2(motorFL, motorFR, motorBL, motorBR, slides, claw, touch, distSensor, imu, this, false);
         robot.setupRobot();
 
         int camViewID = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -62,12 +70,13 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
+        while(!opModeIsActive()){
             signal = mainPipeline.getSignal();
             telemetry.addData("signal", signal);
             telemetry.update();
         }
         waitForStart();
+        robot.closeClaw();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
         signal = mainPipeline.getSignal();
@@ -85,24 +94,24 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
         robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
 //        robot.gyroStrafeEncoder(0.5,-90,4);
-        robot.gyroStrafeEncoder(0.5,170,31);
+        robot.gyroStrafeEncoder(0.5,170,29);
         robot.gyroStrafeEncoder(0.5,-90,61);
-        robot.gyroStrafeEncoder(0.5,90,7);
+        robot.gyroStrafeEncoder(0.5,90,10);
         robot.goToHigh_Initial(false);
-        robot.gyroStrafeEncoder(0.5,0,36);
+        robot.gyroStrafeEncoder(0.5,180,40);
 
         switch(signal){
             case 1:
-                robot.gyroStrafeEncoder(0.5,90,1);
+                robot.gyroStrafeEncoder(0.7,90,1);
 
                 break;
             case 2:
-                robot.gyroStrafeEncoder(0.5,90,24);
+                robot.gyroStrafeEncoder(0.7,90,24);
                 //move somehow
                 break;
             case 3:
             default:
-                robot.gyroStrafeEncoder(0.5,90,47);
+                robot.gyroStrafeEncoder(0.7,90,47);
                 //move
                 break;
         }

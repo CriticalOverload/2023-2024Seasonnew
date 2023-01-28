@@ -894,7 +894,7 @@ public class RobotClass2 {
             completeStop();
             resetAngle();
             moveSlides('f',0.3);
-            Thread.sleep(2000);
+            Thread.sleep(1000);
             openClaw();
             Thread.sleep(1000);
             moveSlides('h',0.5);
@@ -926,16 +926,17 @@ public class RobotClass2 {
             completeStop();
             resetAngle();
             moveSlides('f',0.3);
-            Thread.sleep(2000);
+            Thread.sleep(500);
             openClaw();
+            Thread.sleep(500);
             moveSlides('h',0.5);
             //v2
-            gyroStrafeEncoder(0.5,-90,48);
+            gyroStrafeEncoder(0.5,-90,45);
+            gyroStrafeEncoder(0.5,0,10);
             moveSlides('h',0.5);
-            gyroStrafeEncoder(0.5,0,13);
-            gyroStrafeEncoder(0.3,90,2);
+            gyroStrafeEncoder(0.3,90,4);
             closeClaw();
-            gyroStrafeEncoder(0.3,-90,3);
+            gyroStrafeEncoder(0.3,-90,7);
 //            gyroStrafeEncoder(0.4,90,4); //go toward junction
 //            gyroStrafeEncoder(0.4,-90,4); //move back from junction
 //            gyroTurn(90, 0.5); //turn toward conestack
