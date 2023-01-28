@@ -68,16 +68,16 @@ public class MainTeleOpTest extends LinearOpMode {
             
             motorLS.setPower(gamepad2.right_stick_y * 0.6);
             if(gamepad2.y){
-                robot.moveSlides(3,slidePMod);
+                robot.moveSlides('h',slidePMod);
             }
             if(gamepad2.x){
-                robot.moveSlides(2,slidePMod);
+                robot.moveSlides('m',slidePMod);
             }
             if(gamepad2.b){
-                robot.moveSlides(1,slidePMod);
+                robot.moveSlides('l',slidePMod);
             }
             if(gamepad2.a){
-                robot.moveSlides(0,slidePMod);
+                robot.moveSlides('g',slidePMod);
             }
 
             //Claw

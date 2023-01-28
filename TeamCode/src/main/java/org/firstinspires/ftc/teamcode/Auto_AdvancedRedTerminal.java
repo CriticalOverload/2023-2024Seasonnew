@@ -72,7 +72,6 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
         //1. read signal
         signal = mainPipeline.getSignal();
         telemetry.addData("signal",signal);
-        telemetry.update();
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
@@ -83,10 +82,34 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
         //turn ccw 90
         // go forward a square
         //drop the cone
-        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
-        robot.gyroStrafeEncoder(0.5,180,28);
-        robot.gyroStrafeEncoder(0.5,-90,30);
+//        robot.moveSlides(2,0.3);
+//        robot.gyroStrafeEncoder(0.5,-90,4);
+        robot.gyroStrafeEncoder(0.5,170,31);
+        robot.gyroStrafeEncoder(0.5,-90,61);
+        robot.gyroStrafeEncoder(0.5,90,7);
+        robot.goToHigh_Initial(false);
+        robot.gyroStrafeEncoder(0.5,0,36);
+
+        switch(signal){
+            case 1:
+                robot.gyroStrafeEncoder(0.5,90,1);
+
+                break;
+            case 2:
+                robot.gyroStrafeEncoder(0.5,90,24);
+                //move somehow
+                break;
+            case 3:
+            default:
+                robot.gyroStrafeEncoder(0.5,90,47);
+                //move
+                break;
+        }
+
+
+
+//
 //        robot.moveSlides(2,0.3);
         // robot.gyroStrafeEncoder(0.5,-90,4);
 
@@ -98,25 +121,25 @@ public class Auto_AdvancedRedTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-        switch(signal){
-            case 1:
-                robot.gyroStrafeEncoder(0.5,180,25);
-                robot.gyroStrafeEncoder(0.5,-90,26);
-                robot.gyroStrafeEncoder(0.5,0,25);
-                break;
-            case 2:
-                robot.gyroStrafeEncoder(0.5,180,28);
-                robot.gyroStrafeEncoder(0.5,-90,30);
-                //change strafing angle so that it adjusts to the tilt
-                //move somehow
-                break;
-//            default:
-            case 3:
-                robot.gyroStrafeEncoder(0.5,180,54);
-                robot.gyroStrafeEncoder(0.5,-90,30);
-                //move
-                break;
-        }
+//         switch(signal){
+//             case 1:
+//                 robot.gyroStrafeEncoder(0.5,180,25);
+//                 robot.gyroStrafeEncoder(0.5,-90,26);
+//                 robot.gyroStrafeEncoder(0.5,0,25);
+//                 break;
+//             case 2:
+//                 robot.gyroStrafeEncoder(0.5,180,28);
+//                 robot.gyroStrafeEncoder(0.5,-90,30);
+//                 //change strafing angle so that it adjusts to the tilt
+//                 //move somehow
+//                 break;
+// //            default:
+//             case 3:
+//                 robot.gyroStrafeEncoder(0.5,180,54);
+//                 robot.gyroStrafeEncoder(0.5,-90,30);
+//                 //move
+//                 break;
+//         }
 
 
     }

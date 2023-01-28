@@ -33,7 +33,6 @@ public class Auto_AdvancedBlueTerminal extends LinearOpMode {
     private CVClass2 mainPipeline;
 
     private int signal;
-    private double value;
 
     @Override
     public void runOpMode() throws InterruptedException{
@@ -71,19 +70,17 @@ public class Auto_AdvancedBlueTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
+        while(!opModeIsActive()){
             signal = mainPipeline.getSignal();
             telemetry.addData("signal", signal);
             telemetry.update();
         }
         waitForStart();
+        robot.closeClaw();
         //if webcam on the back, then start facing the back. orientation of initial robot only matters up till #2
         //1. read signal
-        value = distSensor.getDistance(DistanceUnit.INCH);
-        telemetry.addData("Distance:", value);
         signal = mainPipeline.getSignal();
         telemetry.addData("signal",signal);
-        telemetry.update();
         if(signal==0)
             telemetry.addData("assuming",3);
         telemetry.update();
@@ -98,10 +95,11 @@ public class Auto_AdvancedBlueTerminal extends LinearOpMode {
         robot.dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
 //        robot.moveSlides(2,0.3);
 //        robot.gyroStrafeEncoder(0.5,-90,4);
-        robot.gyroStrafeEncoder(0.5,10,28);
-        robot.gyroStrafeEncoder(0.5,-90,55);
-        robot.gyroStrafeEncoder(0.5,90,4);
+        robot.gyroStrafeEncoder(0.5,10,31);
+        robot.gyroStrafeEncoder(0.5,-90,61);
+        robot.gyroStrafeEncoder(0.5,90,7);
         robot.goToHigh_Initial(true);
+        robot.gyroStrafeEncoder(0.5,0,42);
 
 //        robot.moveSlides(0,0.3);
 //        //3. turn and go to cone stack and align vertically
@@ -110,25 +108,21 @@ public class Auto_AdvancedBlueTerminal extends LinearOpMode {
 //        robot.gyroTurn(90,0.5);
 //        robot.moveSlides(4, 0.5);
 //        robot.openClaw();
-//        switch(signal){
-//            case 1:
-//                robot.gyroStrafeEncoder(0.5,10,54);
-//                robot.gyroStrafeEncoder(0.5,-90,30);
-//
-//                break;
-//            case 2:
-//                robot.gyroStrafeEncoder(0.5,10,28);
-//                robot.gyroStrafeEncoder(0.5,-90,30);
-//                //move somehow
-//                break;
-////            default:
-//            case 3:
-//                robot.gyroStrafeEncoder(0.5,10,25);
-//                robot.gyroStrafeEncoder(0.5,-90,30);
-//                robot.gyroStrafeEncoder(0.5,180, 25);
-//                //move
-//                break;
-//        }
+        switch(signal){
+            case 1:
+                robot.gyroStrafeEncoder(0.5,90,1);
+
+                break;
+            case 2:
+                robot.gyroStrafeEncoder(0.5,90,24);
+                //move somehow
+                break;
+            case 3:
+            default:
+                robot.gyroStrafeEncoder(0.5,90,47);
+                //move
+                break;
+        }
 
 
     }

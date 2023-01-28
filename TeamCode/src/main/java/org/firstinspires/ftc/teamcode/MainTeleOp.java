@@ -29,7 +29,7 @@ public class MainTeleOp extends LinearOpMode {
         
         servo.setPosition(0);
 
-        //robot class????????
+        //robot class?????????????????????????????
 
         //reverse the needed motors
         motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -53,7 +53,7 @@ public class MainTeleOp extends LinearOpMode {
                 telemetry.addData("right bumper","gamepad1");
             }else if(gamepad1.left_bumper){
                 telemetry.addData("left bumper","gamepad1");
-                powerMod = 0.4;
+                powerMod = 0.3;
             }else{
                 powerMod = 0.8;
             }
@@ -86,10 +86,10 @@ public class MainTeleOp extends LinearOpMode {
 
             //Claw
             if (gamepad2.dpad_up) {
-                servo.setPosition(0.5);
+                servo.setPosition(0.0);
             }
             else if (gamepad2.dpad_down) {
-                servo.setPosition(0.0);
+                servo.setPosition(0.5);
             }
             telemetry.addData("Slide position",motorLS.getCurrentPosition());
             telemetry.update();

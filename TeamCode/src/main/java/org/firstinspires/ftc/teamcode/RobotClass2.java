@@ -810,7 +810,9 @@ public class RobotClass2 {
      */
     public void driveToWall(double power, double dist) throws InterruptedException{
         resetAngle();
-        while(distSensor.getDistance(DistanceUnit.INCH) > dist && opMode.opModeIsActive()){
+        ElapsedTime timer = new ElapsedTime();
+        double secs = timer.seconds();
+        while(distSensor.getDistance(DistanceUnit.INCH) > dist && opMode.opModeIsActive() && (timer.seconds() - secs < 6)){
             double correction = getCorrection();
             correctedTankStrafe(power, power, correction);
             telemetry.addData("distance reading", distSensor.getDistance(DistanceUnit.INCH));
@@ -818,7 +820,7 @@ public class RobotClass2 {
         }
 //        completeStop();
 //        Thread.sleep(250);
-        resetAngle();
+//        resetAngle();
         //note: NO COMPLETE STOP!!!!!!!!!!!!!!
     }
 
@@ -875,7 +877,7 @@ public class RobotClass2 {
             mod=-1;
         gyroStrafeEncoder(power*mod,10,30 );//may need more, basically go to the wall
 //        openClaw();
-        sleep(500);
+        sleep(250);
 //        moveSlides(1,0.3);
         
 
@@ -884,22 +886,60 @@ public class RobotClass2 {
 
     public void goToHigh_Initial(boolean blue) throws InterruptedException{
         if(blue){
-            gyroTurn(90,0.5);// Turn towards stack
-            driveToWall(1,10);
-            driveToWall(0.25,5);//change power?
+            gyroTurn(87,0.5);// Turn towards stack
+            // gyroStrafeEncoder(0.3,90,19); //move towards stack
+            driveToWall(0.2,20);
+            moveSlides('c',0.5);
+            driveToWall(0.2,3);
             completeStop();
-
-            gyroStrafeEncoder(0.5,-90,20); //move backwards junction
-            gyroTurn(80, 0.5); //turns toward nunction
-            gyroStrafeEncoder(0.5,180,14); //strafe left towards junction
+            resetAngle();
+            moveSlides('f',0.3);
+            Thread.sleep(2000);
+            openClaw();
+            Thread.sleep(1000);
+            moveSlides('h',0.5);
+            //v2
+            gyroStrafeEncoder(0.5,-90,48);
+            moveSlides('h',0.5);
+            gyroStrafeEncoder(0.5,180,13);
+            gyroStrafeEncoder(0.5,90,2);
+            closeClaw();
+            gyroStrafeEncoder(0.3,-90,3);
+            //v1
+//            gyroStrafeEncoder(0.3,90,2); //move slowly towards stack
+//            gyroStrafeEncoder(0.5,-90,20); //move backwards junction
+//            gyroTurn(80, 0.5); //turns toward nunction
+//            gyroStrafeEncoder(0.5,180,18); //strafe left towards junction
+//            closeClaw();
 //            gyroStrafeEncoder(0.4,90,4); //go toward junction
 //            gyroStrafeEncoder(0.4,-90,4); //move back from junction
 //            gyroTurn(-90, 0.5); //turn toward conestack
         }
-        else{
+        else{//change
 
+
+            gyroTurn(-87,0.5);// Turn towards stack
+            // gyroStrafeEncoder(0.3,90,19); //move towards stack
+            driveToWall(0.2,20);
+            moveSlides('c',0.5);
+            driveToWall(0.2,3);
+            completeStop();
+            resetAngle();
+            moveSlides('f',0.3);
+            Thread.sleep(2000);
+            openClaw();
+            moveSlides('h',0.5);
+            //v2
+            gyroStrafeEncoder(0.5,-90,48);
+            moveSlides('h',0.5);
+            gyroStrafeEncoder(0.5,0,13);
+            gyroStrafeEncoder(0.3,90,2);
+            closeClaw();
+            gyroStrafeEncoder(0.3,-90,3);
+//            gyroStrafeEncoder(0.4,90,4); //go toward junction
+//            gyroStrafeEncoder(0.4,-90,4); //move back from junction
+//            gyroTurn(90, 0.5); //turn toward conestack
         }
-
     }
 
     public void goToHigh_after(boolean blue) throws InterruptedException{
@@ -922,10 +962,55 @@ public class RobotClass2 {
     /**
      * Does Autonomous
      * @param leftSide true if on left, false if on right
+     * @param signal signal
      * */
     public void doAuto(int signal, boolean leftSide) throws InterruptedException{
         //insert stuff once I can figure out what in the world is going on with the auto :sob::sob::sob:
-        dropInTerminal(0.5, true);//see robot class for method, should be mirror for red
+        dropInTerminal(0.5, leftSide);//see robot class for method, should be mirror for red
+        switch(signal){
+            case 1:
+                if(leftSide) {
+                    gyroStrafeEncoder(0.5,180,25);
+                    gyroStrafeEncoder(0.5,-90,30);
+                    gyroStrafeEncoder(0.5,0,25);
+                }
+                else{
+                    gyroStrafeEncoder(0.5, 10, 54);
+                    gyroStrafeEncoder(0.5, -90, 30);
+                }
+                break;
+            case 2:
+                if(leftSide){
+                    gyroStrafeEncoder(0.5,180,28);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                else{
+                    gyroStrafeEncoder(0.5,10,28);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                break;
+            case 3:
+            default:
+                if(leftSide){
+                    gyroStrafeEncoder(0.5,180,54);
+                    gyroStrafeEncoder(0.5,-90,30);
+                }
+                else{
+                    gyroStrafeEncoder(0.5,10,25);
+                    gyroStrafeEncoder(0.5,-90,30);
+                    gyroStrafeEncoder(0.5,180, 25);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Does Autonomous, for repeated motions first. parking later.... will figure it out
+     * @param signal signal
+     * @param leftSide true if on left, false if on right
+     * */
+    public void doAuto_tempthing(int signal, boolean leftSide) throws InterruptedException{
+        //insert stuff once I can figure out what in the world is going on with the auto :sob::sob::sob:
         switch(signal){
             case 1:
                 if(leftSide) {
@@ -968,7 +1053,7 @@ public class RobotClass2 {
      * Move slide to position
      * @param level ground hub thing/(cone on) ground(slight adjustment), low, medium, or high junction
      * */
-    public void moveSlides(int level, double power){
+    public void moveSlides(char level, double power){
         double circumference = 4.409;//circumference of pulley for hub
 //        double groundRN = ; // rotations needed to reach point from 0
 //        double smallRN =;
@@ -977,37 +1062,30 @@ public class RobotClass2 {
 
         //setup this with pid stuff
         int target;
-        switch(level){
+        switch(level){//todo!!!!!!!!!!!!!!!!!!!!!
             default:
-            case 0:
+            case 'd'://down, pick up position
+            case 'm'://medium
+            case 'l'://low
                 //pick up 
-                target = -389;//2/circumference;//arbitrary todo change!!!
+                target = -389;
                 break;
-            case 1:
-                //low
-                target = -1685;//16/circumference;
+            case 'h'://high
+                target = -4400; //-4052
                 break;
-            case 2:
-                //medium
-                target = -2891;
-                break;
-            case 3:
-                //high
-                target = -4065;
-                break;
-            case 4:
+            case 'c'://right before pick up from cone stack
                 //ground
-                target = -36;
+                target = -1170;
                 break;
-            case 5:
-                //4cones
-                target = -803;
+            case 'f'://first cone pick up
+                target = -690;
                 break;
-            case 6:
-                //4cones pickup height
-                target = -750;
+            case 's':
+                target = -594;
                 break;
-                
+            case 'r':
+                target = -459;
+                break;
         }
         if(viperslide.getCurrentPosition() < target) {
             viperslide.setPower(power);
@@ -1016,73 +1094,17 @@ public class RobotClass2 {
             viperslide.setPower(-power);
         }
         viperslide.setTargetPosition(target);
-        while((!stopButton.isPressed())||(Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
+        while((!stopButton.isPressed())&&(Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
         viperslide.setPower(0);
         
     }
 
-
-    public void moveSlidesNoTouch(int level, double power){
-        double circumference = 4.409;//circumference of pulley for hub
-//        double groundRN = ; // rotations needed to reach point from 0
-//        double smallRN =;
-        double medRN =26/circumference;
-        double highEP =37/circumference;// (inches from ground / circumference)* ticks
-
-        //setup this with pid stuff
-        int target;
-        switch(level){
-            default:
-            case 0:
-                //pick up
-                target = -389;//2/circumference;//arbitrary todo change!!!
-                break;
-            case 1:
-                //low
-                target = -1685;//16/circumference;
-                break;
-            case 2:
-                //medium
-                target = -2891;
-                break;
-            case 3:
-                //high
-                target = -4065;
-                break;
-            case 4:
-                //ground
-                target = -36;
-                break;
-            case 5:
-                //4cones
-                target = -803;
-                break;
-            case 6:
-                //4cones pickup height
-                target = -750;
-                break;
-
-        }
-        if(viperslide.getCurrentPosition() < target) {
-            viperslide.setPower(power);
-        }
-        else{
-            viperslide.setPower(-power);
-        }
-        viperslide.setTargetPosition(target);
-        while((Math.abs(viperslide.getCurrentPosition() - target) > 5 && opMode.opModeIsActive()));
-        viperslide.setPower(0);
-
-    }
-
     public void openClaw(){
-        claw.setPosition(0.5);
+        claw.setPosition(0);
     }
-
-
 
     public void closeClaw(){
-        claw.setPosition(-1);
+        claw.setPosition(0.5);
     }
 
     public void setLastError(double e){//?????????

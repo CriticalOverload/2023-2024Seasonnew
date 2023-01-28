@@ -6,22 +6,18 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-//@TeleOp(name = "distance test")
+@TeleOp(name = "distance test")
 public class DistanceSensorTest extends LinearOpMode {
 
-    private DistanceSensor distsensefront, distsenseback;
+    private DistanceSensor distsense;
 
     @Override
     public void runOpMode() throws InterruptedException{
-
-        distsensefront = hardwareMap.get(DistanceSensor.class,"distsensefront");
-        distsenseback = hardwareMap.get(DistanceSensor.class,"distsenseback");
+        distsense = hardwareMap.get(DistanceSensor.class,"dist");
         waitForStart();
         while(opModeIsActive()) {
             telemetry.addData("deviceName","front");
-            telemetry.addData("distance reading:", distsensefront.getDistance(DistanceUnit.CM));
-            telemetry.addData("deviceName","back");
-            telemetry.addData("distance reading:", distsenseback.getDistance(DistanceUnit.CM));
+            telemetry.addData("distance reading:", distsense.getDistance(DistanceUnit.INCH));
             telemetry.update();
         }
     }

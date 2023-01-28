@@ -76,7 +76,7 @@ public class linearSlideTest extends LinearOpMode {
         if (signal == 0)
             telemetry.addData("assuming", 3);
         telemetry.update();
-        robot.moveSlides(2, 0.5);
+        robot.moveSlides('m', 0.5);
 
     }
 }
