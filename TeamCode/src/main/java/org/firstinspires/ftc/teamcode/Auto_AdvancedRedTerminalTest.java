@@ -90,9 +90,9 @@ public class Auto_AdvancedRedTerminalTest extends LinearOpMode {
         // go forward a square
         //drop the cone
         robot.gyroStrafeEncoder(0.5,-90,61);
-        robot.gyroStrafeEncoder(0.5,90,10);
+        robot.gyroStrafeEncoder(0.5,90,11);
         robot.goToHigh_Initial(false);
-        robot.gyroStrafeEncoder(0.5,180,40);
+        robot.gyroStrafeEncoder(0.5,180,23);
 
         switch(signal){
             case 1:

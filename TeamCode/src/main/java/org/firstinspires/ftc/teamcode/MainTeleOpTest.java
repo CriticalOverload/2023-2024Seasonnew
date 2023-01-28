@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,8 @@ public class MainTeleOpTest extends LinearOpMode {
     private Servo servo;
     private TouchSensor touch;
 
+    private BNO055IMU imu;
+
     private double powerMod = 0.8;
     private double slidePMod = 1.0;
     private RobotClass2 robot;
@@ -22,11 +25,12 @@ public class MainTeleOpTest extends LinearOpMode {
         motorFrontLeft = hardwareMap.dcMotor.get("FL");
         motorBackLeft = hardwareMap.dcMotor.get("BL");
         motorBackRight = hardwareMap.dcMotor.get("BR");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         servo = hardwareMap.servo.get("claw");
         motorLS = hardwareMap.dcMotor.get("LS");
         touch = hardwareMap.get(TouchSensor.class,"touch");
         
-        robot = new RobotClass2(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, motorLS, servo, null, this, false);
+        robot = new RobotClass2(motorFrontLeft, motorFrontRight, motorBackLeft, motorBackRight, motorLS, servo, touch, null, imu, this, false);
 
         robot.setupRobot_base_slide_claw_noimu();
         
@@ -39,7 +43,7 @@ public class MainTeleOpTest extends LinearOpMode {
                 telemetry.addData("right bumper","gamepad1");
             }else if(gamepad1.left_bumper){
                 telemetry.addData("left bumper","gamepad1");
-                powerMod = 0.4;
+                powerMod = 0.3;
             }else{
                 powerMod = 0.8;
             }

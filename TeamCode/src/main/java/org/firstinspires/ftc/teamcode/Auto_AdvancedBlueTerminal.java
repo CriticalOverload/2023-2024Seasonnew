@@ -97,9 +97,9 @@ public class Auto_AdvancedBlueTerminal extends LinearOpMode {
 //        robot.gyroStrafeEncoder(0.5,-90,4);
         robot.gyroStrafeEncoder(0.5,10,31);
         robot.gyroStrafeEncoder(0.5,-90,61);
-        robot.gyroStrafeEncoder(0.5,90,7);
+        robot.gyroStrafeEncoder(0.5,90,9);
         robot.goToHigh_Initial(true);
-        robot.gyroStrafeEncoder(0.5,0,42);
+        robot.gyroStrafeEncoder(0.5,0,48);
 
 //        robot.moveSlides(0,0.3);
 //        //3. turn and go to cone stack and align vertically

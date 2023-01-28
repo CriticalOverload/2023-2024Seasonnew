@@ -13,7 +13,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="auto testing distances")
+//@Autonomous(name="auto testing distances")
 public class AutoTesting extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private BNO055IMU imu;

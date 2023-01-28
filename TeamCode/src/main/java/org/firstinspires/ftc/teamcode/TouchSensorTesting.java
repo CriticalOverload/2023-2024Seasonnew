@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-@Autonomous(name="Touch Sensor Testing")
+//@Autonomous(name="Touch Sensor Testing")
 public class TouchSensorTesting extends LinearOpMode {
     private TouchSensor touch;
 

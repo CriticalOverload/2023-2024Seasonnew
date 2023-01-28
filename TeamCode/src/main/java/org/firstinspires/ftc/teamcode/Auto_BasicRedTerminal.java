@@ -12,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name="AA Basic Left Auto (non-terminal)")
+@Autonomous(name="AA Basic Red (Left Auto)")
 public class Auto_BasicRedTerminal extends LinearOpMode {
     private DcMotor motorFL, motorBR, motorBL, motorFR;
     private DcMotor slides;
@@ -62,7 +62,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
                 System.exit(0);
             }
         });
-        while(opModeIsActive() == false){
+        while(!opModeIsActive()){
             signal = mainPipeline.getSignal();
             telemetry.addData("signal", signal);
             telemetry.update();
@@ -77,7 +77,7 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
             telemetry.addData("assuming",3);
         telemetry.update();
 
-        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
+//        robot.gyroStrafeEncoder(0.5,-90,2);//moving from the wall a bit
         robot.dropInTerminal(0.5, false);//see robot class for method, should be mirror for red
         switch(signal){
             case 1:
