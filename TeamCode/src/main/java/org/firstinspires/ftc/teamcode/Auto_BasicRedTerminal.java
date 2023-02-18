@@ -82,7 +82,8 @@ public class Auto_BasicRedTerminal extends LinearOpMode {
         switch(signal){
             case 1:
                 robot.gyroStrafeEncoder(0.5,180,25);
-                robot.gyroStrafeEncoder(0.5,-90,30);
+                robot.gyroStrafeEncoder(0.5,-90,32);
+                robot.gyroStrafeEncoder(0.5,90,5);
                 robot.gyroStrafeEncoder(0.5,0,25);
                 break;
             case 2:
